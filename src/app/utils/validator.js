@@ -11,6 +11,10 @@ export function validator(data, config) {
                 }
                 break;
             }
+            case "minName": {
+                statusValidate = data.length < config.value;
+                break;
+            }
             case "isEmail": {
                 const emailRegExp = /^\S+@\S+\.\S+$/g;
                 statusValidate = !emailRegExp.test(data);
