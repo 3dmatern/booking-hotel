@@ -1,22 +1,22 @@
 export const services = {
-    wi_fi: { icon: "wifi", name: "Бесплатный Wi‑Fi" },
+    wi_fi: { value: "wifi", label: "Бесплатный Wi‑Fi" },
     parking: {
-        icon: "p-square-fill",
-        name: "Парковка",
+        value: "p-square-fill",
+        label: "Парковка",
     },
     conditioner: {
-        icon: "fan",
-        name: "Кондиционер в номере",
+        value: "fan",
+        label: "Кондиционер в номере",
     },
     card_payment: {
-        icon: "credit-card-2-back-fill",
-        name: "Оплата картой",
+        value: "credit-card-2-back-fill",
+        label: "Оплата картой",
     },
     gym: {
-        icon: "battery-charging",
-        name: "Тренажерный зал",
+        value: "battery-charging",
+        label: "Тренажерный зал",
     },
-    pool: { icon: "water", name: "Бассейн" },
-    shower: { icon: "droplet-half", name: "Ванна или душ" },
-    fridge: { icon: "snow3", name: "Холодильник" },
+    pool: { value: "water", label: "Бассейн" },
+    shower: { value: "droplet-half", label: "Ванна или душ" },
+    fridge: { value: "snow3", label: "Холодильник" },
 };

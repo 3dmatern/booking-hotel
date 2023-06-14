@@ -250,6 +250,23 @@ if (!localStorage.getItem("hotels")) {
     localStorage.setItem("hotels", JSON.stringify(hotels));
 }
 
+const create = (payload) => {
+    new Promise((resolve) => {
+        window.setTimeout(function () {
+            const hotels = JSON.parse(localStorage.getItem("hotels"));
+            const newHotel = {
+                _id: hotels.length + 1,
+                rooms: [],
+                rate: 0,
+                ...payload,
+            };
+            hotels.push(newHotel);
+            localStorage.setItem("hotels", JSON.stringify(hotels));
+            resolve(newHotel);
+        }, 1000);
+    });
+};
+
 const fetchAll = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
@@ -279,6 +296,7 @@ const getByIdHotel = (id) =>
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+    create,
     fetchAll,
     getByIdHotel,
     updateHotel,

@@ -1,19 +1,8 @@
 import React from "react";
 
-const TextField = ({
-    label,
-    type,
-    name,
-    value,
-    min,
-    max,
-    step,
-    placeholder,
-    onChange,
-    error,
-}) => {
+const FileField = ({ label, name, onChange, error, accept, multiple }) => {
     const handleChange = ({ target }) => {
-        onChange({ name: target.name, value: target.value });
+        onChange(target);
     };
 
     const getInputClasses = () => {
@@ -27,15 +16,12 @@ const TextField = ({
             <div className="input-group has-validation">
                 <input
                     id={name}
-                    type={type || "text"}
+                    type="file"
                     className={getInputClasses()}
                     name={name}
-                    value={value}
-                    min={min}
-                    max={max}
-                    step={step}
-                    placeholder={placeholder}
                     onChange={handleChange}
+                    accept={accept}
+                    multiple={multiple}
                 />
                 {error && <div className="invalid-feedback">{error}</div>}
             </div>
@@ -43,4 +29,4 @@ const TextField = ({
     );
 };
 
-export default TextField;
+export default FileField;

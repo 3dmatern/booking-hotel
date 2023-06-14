@@ -29,7 +29,7 @@ function App() {
                                     element={<Hotel />}
                                 />
                                 <Route path="/booking" element={<Booking />} />
-                                <Route path="/admin" element={<Admin />} />
+                                <Route path="/admin/*" element={<Admin />} />
                                 <Route path="/logout" element={<Logout />} />
                             </Routes>
                         </RoomsProvider>

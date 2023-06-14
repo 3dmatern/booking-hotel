@@ -63,12 +63,12 @@ const RoomCard = ({ room, close, onClick }) => {
                         <p className="card-text mb-3">{room.info}</p>
                         <div className="d-flex justify-content-between">
                             {room.services.map((service) => (
-                                <div className="p-3" key={service.name}>
+                                <div className="p-3" key={service.label}>
                                     <p>
                                         <i
-                                            className={"bi bi-" + service.icon}
+                                            className={"bi bi-" + service.value}
                                         ></i>
-                                        {" " + service.name}
+                                        {" " + service.label}
                                     </p>
                                 </div>
                             ))}

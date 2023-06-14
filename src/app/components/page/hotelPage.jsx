@@ -71,10 +71,10 @@ const HotelPage = () => {
                     </div>
                     <div className="d-flex justify-content-between">
                         {hotel.services.map((service) => (
-                            <div className="p-3" key={service.name}>
+                            <div className="p-3" key={service.label}>
                                 <p>
-                                    <i className={"bi bi-" + service.icon}></i>
-                                    {" " + service.name}
+                                    <i className={"bi bi-" + service.value}></i>
+                                    {" " + service.label}
                                 </p>
                             </div>
                         ))}

@@ -13,6 +13,15 @@ export const HotelsProvider = ({ children }) => {
     const [errors, setErrors] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    const createHotel = async (payload) => {
+        try {
+            const content = await api.hotels.create(payload);
+            return content;
+        } catch (error) {
+            errorCatcher(error);
+        }
+    };
+
     const getHotels = async () => {
         try {
             const content = await api.hotels.fetchAll();
@@ -45,7 +54,7 @@ export const HotelsProvider = ({ children }) => {
     }, [errors]);
 
     return (
-        <HotelsContext.Provider value={{ hotels, getHotel }}>
+        <HotelsContext.Provider value={{ hotels, getHotel, createHotel }}>
             {!isLoading ? (
                 children
             ) : (
