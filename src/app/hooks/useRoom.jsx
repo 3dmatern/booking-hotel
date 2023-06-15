@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import api from "../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const RoomsContext = React.createContext();
 
@@ -9,9 +10,20 @@ export const useRoom = () => {
 };
 
 export const RoomsProvider = ({ children }) => {
+    const navigate = useNavigate();
     const [rooms, setRooms] = useState([]);
     const [errors, setErrors] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+
+    const createRoom = async (payload) => {
+        try {
+            const content = await api.rooms.create(payload);
+            navigate("/admin");
+            return content;
+        } catch (error) {
+            errorCatcher(error);
+        }
+    };
 
     const getRooms = async () => {
         try {
@@ -63,7 +75,7 @@ export const RoomsProvider = ({ children }) => {
 
     return (
         <RoomsContext.Provider
-            value={{ rooms, getRoom, bookingRemove, bookingAdd }}
+            value={{ rooms, createRoom, getRoom, bookingRemove, bookingAdd }}
         >
             {!isLoading ? (
                 children

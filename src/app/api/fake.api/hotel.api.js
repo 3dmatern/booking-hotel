@@ -250,7 +250,7 @@ if (!localStorage.getItem("hotels")) {
     localStorage.setItem("hotels", JSON.stringify(hotels));
 }
 
-const create = (payload) => {
+const create = (payload) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             const hotels = JSON.parse(localStorage.getItem("hotels"));
@@ -265,7 +265,6 @@ const create = (payload) => {
             resolve(newHotel);
         }, 1000);
     });
-};
 
 const fetchAll = () =>
     new Promise((resolve) => {
@@ -279,6 +278,15 @@ const updateHotel = (id, data) =>
         const hotels = JSON.parse(localStorage.getItem("hotels"));
         const hotelIndex = hotels.findIndex((h) => h._id === id);
         hotels[hotelIndex] = { ...hotels[hotelIndex], ...data };
+        localStorage.setItem("hotels", JSON.stringify(hotels));
+        resolve(hotels[hotelIndex]);
+    });
+
+const addRoomForHotel = (id, room) =>
+    new Promise((resolve) => {
+        const hotels = JSON.parse(localStorage.getItem("hotels"));
+        const hotelIndex = hotels.findIndex((h) => h._id === id);
+        hotels[hotelIndex].rooms.push(room);
         localStorage.setItem("hotels", JSON.stringify(hotels));
         resolve(hotels[hotelIndex]);
     });
@@ -300,4 +308,5 @@ export default {
     fetchAll,
     getByIdHotel,
     updateHotel,
+    addRoomForHotel,
 };

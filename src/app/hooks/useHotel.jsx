@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import api from "../api";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const HotelsContext = React.createContext();
 
@@ -9,6 +10,7 @@ export const useHotel = () => {
 };
 
 export const HotelsProvider = ({ children }) => {
+    const navigate = useNavigate();
     const [hotels, setHotels] = useState([]);
     const [errors, setErrors] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +18,17 @@ export const HotelsProvider = ({ children }) => {
     const createHotel = async (payload) => {
         try {
             const content = await api.hotels.create(payload);
+            navigate("/admin");
+            return content;
+        } catch (error) {
+            errorCatcher(error);
+        }
+    };
+
+    const addRoomHotel = async (id, payload) => {
+        try {
+            const content = await api.hotels.addRoomForHotel(id, payload);
+            console.log(content);
             return content;
         } catch (error) {
             errorCatcher(error);
@@ -54,7 +67,9 @@ export const HotelsProvider = ({ children }) => {
     }, [errors]);
 
     return (
-        <HotelsContext.Provider value={{ hotels, getHotel, createHotel }}>
+        <HotelsContext.Provider
+            value={{ hotels, getHotel, createHotel, addRoomHotel }}
+        >
             {!isLoading ? (
                 children
             ) : (

@@ -43,7 +43,6 @@ const FormCreateHotel = ({ currentUser }) => {
             image: image,
             images: images,
         };
-        console.log(newData);
         createHotel(newData);
     };
     return (

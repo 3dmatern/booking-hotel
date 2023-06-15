@@ -219,6 +219,24 @@ if (!localStorage.getItem("rooms")) {
     localStorage.setItem("rooms", JSON.stringify(rooms));
 }
 
+const create = (payload) =>
+    new Promise((resolve) => {
+        window.setTimeout(function () {
+            const rooms = JSON.parse(localStorage.getItem("rooms"));
+            const newRoom = {
+                _id: rooms.length + 1,
+                userId: null,
+                booking: false,
+                dayOfArrival: "",
+                dayOfDeparture: "2023-06-08",
+                ...payload,
+            };
+            rooms.push(newRoom);
+            localStorage.setItem("rooms", JSON.stringify(rooms));
+            resolve(newRoom);
+        }, 1000);
+    });
+
 const fetchAll = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
@@ -273,6 +291,7 @@ const bookingRemove = (id) =>
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+    create,
     fetchAll,
     getByIdRoom,
     bookingAdd,

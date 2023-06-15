@@ -32,6 +32,11 @@ const AdminStatusRoom = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser]);
 
+    useEffect(() => {
+        setCurrentRooms(rooms);
+        console.log(currentRooms);
+    }, []);
+
     return (
         <>
             <h3 className="my-5">Панель администратора</h3>
