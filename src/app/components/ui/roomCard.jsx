@@ -1,7 +1,8 @@
 import React from "react";
 import Button from "../common/button";
+import FacilitiesList from "./facilities/facilitiesList";
 
-const RoomCard = ({ room, close, onClick }) => {
+const RoomCard = ({ date, room, close, onClick }) => {
     return (
         <div className="card mb-3 mx-auto">
             <div className="row g-0">
@@ -59,19 +60,18 @@ const RoomCard = ({ room, close, onClick }) => {
                 </div>
                 <div className="col-md-8">
                     <div className="card-body">
-                        <h3 className="card-title">{room.name}</h3>
+                        <h3 className="card-title">
+                            {room.name}
+                            {date && (
+                                <span className="badge text-bg-success">
+                                    c {date.dayOfArrival} по{" "}
+                                    {date.dayOfDeparture}
+                                </span>
+                            )}
+                        </h3>
                         <p className="card-text mb-3">{room.info}</p>
                         <div className="d-flex justify-content-between">
-                            {room.services.map((service) => (
-                                <div className="p-3" key={service.label}>
-                                    <p>
-                                        <i
-                                            className={"bi bi-" + service.value}
-                                        ></i>
-                                        {" " + service.label}
-                                    </p>
-                                </div>
-                            ))}
+                            <FacilitiesList facilities={room.services} />
                         </div>
                         <div className="d-flex justify-content-between align-items-center">
                             <div>
@@ -89,7 +89,7 @@ const RoomCard = ({ room, close, onClick }) => {
                                 <Button
                                     className="danger"
                                     name="Снять бронь"
-                                    onClick={() => onClick(room._id)}
+                                    onClick={() => onClick(room._id, date)}
                                 />
                             ) : (
                                 <Button

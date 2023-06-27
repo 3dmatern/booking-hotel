@@ -85,7 +85,6 @@ const FormSignUp = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
         try {
             await signUp({ ...data });
         } catch (error) {

@@ -13,20 +13,25 @@ const UserBookingPage = ({ currentUser }) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentUser.rooms]);
-    const handleClick = async (roomId) => {
-        const { rooms } = await roomClear(currentUser._id, roomId);
-        await bookingRemove(roomId);
+    const handleClick = async (roomId, date) => {
+        const { rooms } = await roomClear(currentUser._id, roomId, date);
+        await bookingRemove(roomId, currentUser._id, date);
         setRooms(rooms);
     };
 
     return (
         <>
-            {rooms.map((userRoom) => {
-                const room = getRoom(userRoom);
+            {rooms.map((userRoom, index) => {
+                const room = getRoom(userRoom.roomId);
+                const { dayOfArrival, dayOfDeparture } = userRoom;
                 return (
                     <RoomCard
+                        date={{
+                            dayOfArrival,
+                            dayOfDeparture,
+                        }}
                         room={room}
-                        key={room._id}
+                        key={room._id + index}
                         close={true}
                         onClick={handleClick}
                     />

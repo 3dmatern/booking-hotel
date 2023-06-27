@@ -1,13 +1,8 @@
 import React from "react";
 import Modal from "../common/modal";
+import ModalContent from "./modalContent";
 
-const StatusRoom = ({
-    hotels,
-    currentRooms,
-    modalId,
-    removeBooking,
-    getUser,
-}) => {
+const StatusRoom = ({ hotels, currentRooms, modalId, removeBooking }) => {
     return (
         <div className="row row-cols-2 row-cols-lg-4 g-3 mx-auto text-center">
             {hotels.map((hotel) => (
@@ -27,12 +22,7 @@ const StatusRoom = ({
                                     >
                                         <button
                                             type="button"
-                                            className={
-                                                "m-1 btn btn-" +
-                                                (room.booking
-                                                    ? "danger"
-                                                    : "success")
-                                            }
+                                            className="m-1 btn btn-success"
                                             data-bs-toggle="modal"
                                             data-bs-target={`#${modalId}_${hotel._id}_${room.numberRoom}`}
                                         >
@@ -42,49 +32,11 @@ const StatusRoom = ({
                                             id={`${modalId}_${hotel._id}_${room.numberRoom}`}
                                             name={`Отель: ${hotel.name}`}
                                             btnClose="Закрыть"
-                                            btnApply="Снять бронь"
-                                            classNameBtn="danger"
-                                            onClick={() =>
-                                                removeBooking(
-                                                    room.userId,
-                                                    room._id
-                                                )
-                                            }
                                         >
-                                            <p>
-                                                Команта №
-                                                <strong className="text-primary">
-                                                    {" " + room.numberRoom}
-                                                </strong>
-                                            </p>
-                                            {getUser(room.userId) && (
-                                                <>
-                                                    <p>
-                                                        Забронировал:
-                                                        <strong className="text-primary">
-                                                            {" " +
-                                                                getUser(
-                                                                    room.userId
-                                                                ).firstname}
-                                                        </strong>
-                                                        <strong className="text-primary">
-                                                            {" " +
-                                                                getUser(
-                                                                    room.userId
-                                                                ).lastname}
-                                                        </strong>
-                                                    </p>
-                                                    <p>
-                                                        Email:
-                                                        <strong className="text-primary">
-                                                            {" " +
-                                                                getUser(
-                                                                    room.userId
-                                                                ).email}
-                                                        </strong>
-                                                    </p>
-                                                </>
-                                            )}
+                                            <ModalContent
+                                                room={room}
+                                                onClick={removeBooking}
+                                            />
                                         </Modal>
                                     </span>
                                 )

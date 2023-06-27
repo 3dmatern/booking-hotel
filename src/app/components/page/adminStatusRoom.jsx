@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
 import { useRoom } from "../../hooks/useRoom";
-import { useHotel } from "../../hooks/useHotel";
 import { useUser } from "../../hooks/useUser";
 import { useAuth } from "../../hooks/useAuth";
 import { Route, Routes, useNavigate } from "react-router-dom";
@@ -9,20 +8,30 @@ import NavbarAdmin from "../ui/navbarAdmin";
 import StatusRoom from "../ui/statusRoom";
 import FormCreateHotel from "../ui/formCreateHotel";
 import FormCreateRoom from "../ui/formCreateRoom";
+import { useSelector } from "react-redux";
+import { getHotels } from "../../store/hotels";
 
 const AdminStatusRoom = () => {
+    const hotels = useSelector(getHotels());
     const modalId = nanoid();
     const navigate = useNavigate();
     const { currentUser } = useAuth();
-    const { getUser, roomClear } = useUser();
-    const { hotels } = useHotel();
+    const { roomClear } = useUser();
     const { rooms, bookingRemove } = useRoom();
     const [currentRooms, setCurrentRooms] = useState(rooms);
 
-    const removeBooking = async (userId, roomId) => {
-        const newRooms = await bookingRemove(roomId);
-        roomClear(userId, roomId);
-        setCurrentRooms(newRooms);
+    const removeBooking = async ({
+        userId,
+        roomId,
+        dayOfArrival,
+        dayOfDeparture,
+    }) => {
+        const updateRooms = await bookingRemove(roomId, userId, {
+            dayOfArrival,
+            dayOfDeparture,
+        });
+        roomClear(userId, roomId, { dayOfArrival, dayOfDeparture });
+        setCurrentRooms(updateRooms);
     };
 
     useEffect(() => {
@@ -34,7 +43,6 @@ const AdminStatusRoom = () => {
 
     useEffect(() => {
         setCurrentRooms(rooms);
-        console.log(currentRooms);
     }, []);
 
     return (
@@ -50,7 +58,6 @@ const AdminStatusRoom = () => {
                             currentRooms={currentRooms}
                             modalId={modalId}
                             removeBooking={removeBooking}
-                            getUser={getUser}
                         />
                     }
                 />

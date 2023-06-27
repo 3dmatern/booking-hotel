@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import roomService from "../services/roomService";
 
 const RoomsContext = React.createContext();
 
@@ -15,9 +15,9 @@ export const RoomsProvider = ({ children }) => {
     const [errors, setErrors] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    const createRoom = async (payload) => {
+    const create = async (payload) => {
         try {
-            const content = await api.rooms.create(payload);
+            const { content } = await roomService.create(payload);
             navigate("/admin");
             return content;
         } catch (error) {
@@ -27,7 +27,7 @@ export const RoomsProvider = ({ children }) => {
 
     const getRooms = async () => {
         try {
-            const content = await api.rooms.fetchAll();
+            const { content } = await roomService.fetchAll();
             setRooms(content);
             setIsLoading(false);
         } catch (error) {
@@ -40,17 +40,34 @@ export const RoomsProvider = ({ children }) => {
         return content;
     };
 
-    const bookingAdd = async (payload) => {
+    const bookingAdd = async (id, payload) => {
         try {
-            await api.rooms.bookingAdd(payload);
+            const room = getRoom(id);
+            room.day.push(payload);
+            const { content } = await roomService.update(id, {
+                day: room.day,
+                booking: true,
+            });
+            return content;
         } catch (error) {
             errorCatcher(error);
         }
     };
 
-    const bookingRemove = async (id) => {
+    const bookingRemove = async (id, userId, date) => {
         try {
-            const content = await api.rooms.bookingRemove(id);
+            const room = getRoom(id);
+            const dayIndex = room.day.findIndex(
+                (d) =>
+                    d.userId === userId &&
+                    d.dayOfArrival === date.dayOfArrival &&
+                    d.dayOfDeparture === date.dayOfDeparture
+            );
+            room.day.splice(dayIndex, 1);
+            console.log(room.day);
+            const { content } = await roomService.update(id, {
+                day: room.day,
+            });
             return content;
         } catch (error) {
             errorCatcher(error);
@@ -75,7 +92,7 @@ export const RoomsProvider = ({ children }) => {
 
     return (
         <RoomsContext.Provider
-            value={{ rooms, createRoom, getRoom, bookingRemove, bookingAdd }}
+            value={{ rooms, create, getRoom, bookingRemove, bookingAdd }}
         >
             {!isLoading ? (
                 children

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
-import api from "../api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import hotelService from "../services/hotelService";
 
 const HotelsContext = React.createContext();
 
@@ -17,18 +17,8 @@ export const HotelsProvider = ({ children }) => {
 
     const createHotel = async (payload) => {
         try {
-            const content = await api.hotels.create(payload);
+            const { content } = await hotelService.create(payload);
             navigate("/admin");
-            return content;
-        } catch (error) {
-            errorCatcher(error);
-        }
-    };
-
-    const addRoomHotel = async (id, payload) => {
-        try {
-            const content = await api.hotels.addRoomForHotel(id, payload);
-            console.log(content);
             return content;
         } catch (error) {
             errorCatcher(error);
@@ -37,7 +27,7 @@ export const HotelsProvider = ({ children }) => {
 
     const getHotels = async () => {
         try {
-            const content = await api.hotels.fetchAll();
+            const { content } = await hotelService.fetchAll();
             setHotels(content);
             setIsLoading(false);
         } catch (error) {
@@ -48,6 +38,18 @@ export const HotelsProvider = ({ children }) => {
     const getHotel = (id) => {
         const content = hotels.find((h) => h._id === id);
         return content;
+    };
+
+    const addRoomHotel = async (id, roomId) => {
+        try {
+            const { rooms } = getHotel(id);
+            const { content } = await hotelService.update(id, {
+                rooms: [...rooms, roomId],
+            });
+            return content;
+        } catch (error) {
+            errorCatcher(error);
+        }
     };
 
     function errorCatcher(error) {

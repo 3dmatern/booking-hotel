@@ -1,10 +1,6 @@
 import React from "react";
 
 const FileField = ({ label, name, onChange, error, accept, multiple }) => {
-    const handleChange = ({ target }) => {
-        onChange(target);
-    };
-
     const getInputClasses = () => {
         return "form-control" + (error ? " is-invalid" : "");
     };
@@ -19,7 +15,7 @@ const FileField = ({ label, name, onChange, error, accept, multiple }) => {
                     type="file"
                     className={getInputClasses()}
                     name={name}
-                    onChange={handleChange}
+                    onChange={onChange}
                     accept={accept}
                     multiple={multiple}
                 />

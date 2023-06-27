@@ -215,9 +215,9 @@ const rooms = [
     },
 ];
 
-if (!localStorage.getItem("rooms")) {
-    localStorage.setItem("rooms", JSON.stringify(rooms));
-}
+// if (!localStorage.getItem("rooms")) {
+//     localStorage.setItem("rooms", JSON.stringify(rooms));
+// }
 
 const create = (payload) =>
     new Promise((resolve) => {

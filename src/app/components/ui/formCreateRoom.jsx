@@ -1,29 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../common/button";
 import FileField from "../common/form/fileField";
 import MultiSelectField from "../common/form/multiSelectField";
 import TextField from "../common/form/textField";
-import { useHotel } from "../../hooks/useHotel";
-import { services } from "../../api/fake.api/services.api";
 import SelectField from "../common/form/selectField";
 import { useRoom } from "../../hooks/useRoom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    getFacilities,
+    getFacilitiesLoadingStatus,
+    loadFacilitiesList,
+} from "../../store/facilities";
+import { getHotels } from "../../store/hotels";
+import { updateHotelRooms } from "../../store/hotels";
 
 const FormCreateRoom = () => {
-    const { createRoom } = useRoom();
-    const { hotels, addRoomHotel } = useHotel();
+    const dispatch = useDispatch();
+    const facilities = useSelector(getFacilities());
+    const facilitiesLoading = useSelector(getFacilitiesLoadingStatus());
+    const { create } = useRoom();
+    const hotels = useSelector(getHotels());
     const [data, setData] = useState({
-        hotelId: "1",
+        hotelId: "",
         numberRoom: 1,
         name: "",
         info: "",
         breakfest: "",
         numberOfPersons: "2",
         price: 0,
-        services: [],
-        images: [],
+        facilities: [],
     });
-    const [files, setFiles] = useState();
+    const [file, setFile] = useState();
     const [error, setError] = useState({});
+
+    useEffect(() => {
+        dispatch(loadFacilitiesList());
+    }, []);
 
     const hotelsSelect = () => {
         const options = hotels.map((h) => ({ label: h.name, value: h._id }));
@@ -36,28 +48,30 @@ const FormCreateRoom = () => {
             [target.name]: target.value,
         }));
     };
-    const handleChangeFile = (target) => {
-        setFiles(target.files);
+    const handleChangeFile = ({ target }) => {
+        setFile(target.files);
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const images = Object.values(files).map((f) => f.name);
         const newData = {
             ...data,
-            hotelId: Number(data.hotelId),
+            hotelId: data.hotelId,
             numberRoom: Number(data.numberRoom),
             numberOfPersons: Number(data.numberOfPersons),
             price: Number(data.price),
-            images: images,
         };
-        const newRoom = await createRoom(newData);
-        const add = await addRoomHotel(
-            Number(data.hotelId),
-            Number(newRoom._id)
-        );
-        console.log(add);
+        const formData = new FormData();
+        formData.append("data", JSON.stringify(newData));
+        Object.values(file).map((f, index) => {
+            formData.append("images", file[index]);
+            return f;
+        });
+        const newRoom = await create(formData);
+        dispatch(updateHotelRooms(data.hotelId, newRoom._id));
     };
+
+    if (facilitiesLoading) return "Loading...";
     return (
         <form
             onSubmit={handleSubmit}
@@ -139,15 +153,15 @@ const FormCreateRoom = () => {
             <div className="mb-3">
                 <MultiSelectField
                     label="Выберите сервисы и удобства"
-                    name="services"
-                    defaultValue={data.services}
+                    name="facilities"
+                    defaultValue={data.facilities}
                     onChange={handleChange}
-                    options={services}
+                    options={facilities}
                 />
             </div>
             <div className="mb-3">
                 <FileField
-                    label="Остальные фото отеля"
+                    label="Фото команты в формате jpg"
                     type="file"
                     name="images"
                     onChange={handleChangeFile}

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import api from "../api";
+import userService from "../services/userService";
 
 const UserContext = React.createContext();
 
@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
 
     const getUsers = async () => {
         try {
-            const content = await api.users.fetchAll();
+            const { content } = await userService.get();
             setUsers(content);
             setIsLoading(false);
         } catch (error) {
@@ -28,18 +28,32 @@ export const UserProvider = ({ children }) => {
         return content;
     };
 
-    const roomAdd = async (userId, roomId) => {
+    const roomAdd = async (userId, payload) => {
         try {
-            const content = await api.users.addRoom(userId, roomId);
+            const { rooms } = getUser(userId);
+            rooms.push(payload);
+            const { content } = await userService.update(userId, {
+                rooms: rooms,
+            });
             return content;
         } catch (error) {
             errorCatcher(error);
         }
     };
 
-    const roomClear = async (userId, roomId) => {
+    const roomClear = async (userId, roomId, date) => {
         try {
-            const content = await api.users.clearRoom(userId, roomId);
+            const { rooms } = getUser(userId);
+            const roomIndex = rooms.findIndex(
+                (r) =>
+                    r.roomId === roomId &&
+                    r.dayOfArrival === date.dayOfArrival &&
+                    r.dayOfDeparture === date.dayOfDeparture
+            );
+            rooms.splice(roomIndex, 1);
+            const { content } = await userService.update(userId, {
+                rooms,
+            });
             return content;
         } catch (error) {
             errorCatcher(error);

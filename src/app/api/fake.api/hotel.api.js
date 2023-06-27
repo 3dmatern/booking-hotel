@@ -246,9 +246,9 @@ const hotels = [
     },
 ];
 
-if (!localStorage.getItem("hotels")) {
-    localStorage.setItem("hotels", JSON.stringify(hotels));
-}
+// if (!localStorage.getItem("hotels")) {
+//     localStorage.setItem("hotels", JSON.stringify(hotels));
+// }
 
 const create = (payload) =>
     new Promise((resolve) => {

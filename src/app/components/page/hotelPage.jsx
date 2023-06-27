@@ -2,45 +2,79 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import RoomCard from "../ui/roomCard";
 import Calendar from "../ui/calendar";
-import { splitGetTime } from "../../utils/formatCalendarDate";
-import { useHotel } from "../../hooks/useHotel";
 import { useRoom } from "../../hooks/useRoom";
 import { useAuth } from "../../hooks/useAuth";
 import { useUser } from "../../hooks/useUser";
+import { isRoomAvailable } from "../../utils/isRoomAvailable";
+import FacilitiesList from "../ui/facilities/facilitiesList";
+import { useSelector } from "react-redux";
+import { getHotelById } from "../../store/hotels";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
     const { currentUser } = useAuth();
     const { roomAdd } = useUser();
     const { getRoom, bookingAdd } = useRoom();
-    const hotel = useHotel().getHotel(Number(hotelId));
-    const hotelRoms = hotel.rooms.map((room) => getRoom(room));
-    const notBookingRooms = hotelRoms.filter((r) => r.booking !== true);
-    const [filterRooms, setFilterRooms] = useState(notBookingRooms);
+
+    const hotel = useSelector(getHotelById(hotelId));
+    const hotelRooms = hotel.rooms.map((room) => getRoom(room));
+    const [filterRooms, setFilterRooms] = useState(hotelRooms);
     const [date, setDate] = useState({});
 
-    const handleClick = (roomId) => {
+    const handleClick = async (roomId) => {
+        const userId = currentUser._id;
         const payload = {
-            _id: roomId,
-            userId: currentUser._id,
+            userId,
             ...date,
         };
-        bookingAdd(payload);
-        roomAdd(currentUser._id, roomId);
+        const updateRooms = await bookingAdd(roomId, payload);
+        await roomAdd(userId, { roomId, ...date });
+        let filtered = [];
+        for (let i = 0; i < updateRooms.length; i++) {
+            if (updateRooms[i].day.length > 0) {
+                const freeRoom = isRoomAvailable(
+                    updateRooms[i].day,
+                    date.dayOfArrival,
+                    date.dayOfDeparture
+                );
+                if (!freeRoom) {
+                    continue;
+                } else {
+                    filtered.push(updateRooms[i]);
+                }
+            } else {
+                filtered.push(updateRooms[i]);
+            }
+        }
+
+        return setFilterRooms(filtered);
     };
 
     const handleSubmit = (data) => {
-        const dayOfArrival = splitGetTime(data.dayOfArrival);
-
-        const filtered = hotelRoms.filter(
-            (room) => splitGetTime(room.dayOfDeparture) <= dayOfArrival
-        );
+        let filtered = [];
+        for (let i = 0; i < hotelRooms.length; i++) {
+            if (hotelRooms[i].day.length > 0) {
+                const freeRoom = isRoomAvailable(
+                    hotelRooms[i].day,
+                    data.dayOfArrival,
+                    data.dayOfDeparture
+                );
+                if (!freeRoom) {
+                    continue;
+                } else {
+                    filtered.push(hotelRooms[i]);
+                }
+            } else {
+                filtered.push(hotelRooms[i]);
+            }
+        }
         setFilterRooms(filtered);
         setDate({
             dayOfArrival: data.dayOfArrival,
             dayOfDeparture: data.dayOfDeparture,
         });
     };
+
     return (
         <>
             <h3 className="mb-3">
@@ -70,14 +104,7 @@ const HotelPage = () => {
                         </div>
                     </div>
                     <div className="d-flex justify-content-between">
-                        {hotel.services.map((service) => (
-                            <div className="p-3" key={service.label}>
-                                <p>
-                                    <i className={"bi bi-" + service.value}></i>
-                                    {" " + service.label}
-                                </p>
-                            </div>
-                        ))}
+                        <FacilitiesList facilities={hotel.services} />
                     </div>
                 </div>
             </div>

@@ -1,10 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../api";
 import { toast } from "react-toastify";
 import localStorageService, {
     setTokens,
 } from "../services/localStorageService";
+import axios from "axios";
+import config from "../config.json";
+import userService from "../services/userService";
+
+export const httpAuth = axios.create({
+    baseURL: config.apiEndpoint + "/auth/",
+});
 
 const AuthContext = React.createContext();
 
@@ -20,8 +26,8 @@ export const AuthProvider = ({ children }) => {
 
     const signUp = async (payload) => {
         try {
-            const content = await api.users.create(payload);
-            setTokens(content);
+            const { data } = await httpAuth.post("signUp", payload);
+            setTokens(data);
             getUserData();
             navigate(-1);
         } catch (error) {
@@ -31,8 +37,8 @@ export const AuthProvider = ({ children }) => {
 
     const signIn = async ({ email, password }) => {
         try {
-            const content = await api.users.getUser(email, password);
-            setTokens(content);
+            const { data } = await httpAuth.post("signIn", { email, password });
+            setTokens(data);
             getUserData();
             navigate(-1);
         } catch (error) {
@@ -49,7 +55,7 @@ export const AuthProvider = ({ children }) => {
     const getUserData = async () => {
         try {
             const userId = localStorageService.getUserId();
-            const content = await api.users.getUserById(Number(userId));
+            const { content } = await userService.getCurrentUser(userId);
             setCurrentUser(content);
         } catch (error) {
             errorCatcher(error);
