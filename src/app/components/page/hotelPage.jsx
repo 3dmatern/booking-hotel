@@ -1,81 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import RoomCard from "../ui/roomCard";
 import Calendar from "../ui/calendar";
-import { useRoom } from "../../hooks/useRoom";
-import { useAuth } from "../../hooks/useAuth";
-import { useUser } from "../../hooks/useUser";
 import { isRoomAvailable } from "../../utils/isRoomAvailable";
 import FacilitiesList from "../ui/facilities/facilitiesList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getHotelById } from "../../store/hotels";
+import { getRoomCurrentHotel } from "../../store/rooms";
+import {
+    createBooking,
+    getBooking,
+    getBookingLoadingStatus,
+} from "../../store/booking";
+import { getCurrentUser } from "../../store/users";
+import { getHotelsLoadingStatus } from "../../store/hotels";
+import { getRoomsLoadingStatus } from "../../store/rooms";
 
 const HotelPage = () => {
+    const dispatch = useDispatch();
     const { hotelId } = useParams();
-    const { currentUser } = useAuth();
-    const { roomAdd } = useUser();
-    const { getRoom, bookingAdd } = useRoom();
-
+    const currentUser = useSelector(getCurrentUser());
     const hotel = useSelector(getHotelById(hotelId));
-    const hotelRooms = hotel.rooms.map((room) => getRoom(room));
-    const [filterRooms, setFilterRooms] = useState(hotelRooms);
+    const hotelLoadingStatus = useSelector(getHotelsLoadingStatus());
+    const rooms = useSelector(getRoomCurrentHotel(hotelId));
+    const roomsLoadingStatus = useSelector(getRoomsLoadingStatus());
+    const booking = useSelector(getBooking());
+    const bookingLoadingStatus = useSelector(getBookingLoadingStatus());
+    const [filterRooms, setFilterRooms] = useState([]);
     const [date, setDate] = useState({});
 
-    const handleClick = async (roomId) => {
-        const userId = currentUser._id;
-        const payload = {
-            userId,
-            ...date,
-        };
-        const updateRooms = await bookingAdd(roomId, payload);
-        await roomAdd(userId, { roomId, ...date });
-        let filtered = [];
-        for (let i = 0; i < updateRooms.length; i++) {
-            if (updateRooms[i].day.length > 0) {
-                const freeRoom = isRoomAvailable(
-                    updateRooms[i].day,
-                    date.dayOfArrival,
-                    date.dayOfDeparture
-                );
-                if (!freeRoom) {
-                    continue;
-                } else {
-                    filtered.push(updateRooms[i]);
-                }
-            } else {
-                filtered.push(updateRooms[i]);
-            }
+    useEffect(() => {
+        if (!roomsLoadingStatus && !bookingLoadingStatus) {
+            const filtered = rooms.filter(
+                (room) =>
+                    room &&
+                    isRoomAvailable(
+                        booking.filter((b) => b.roomId === room._id),
+                        date.arrivalDate,
+                        date.departureDate
+                    )
+            );
+            setFilterRooms(filtered);
         }
+    }, [roomsLoadingStatus, bookingLoadingStatus, date, booking]);
 
-        return setFilterRooms(filtered);
+    const handleClick = (roomId) => {
+        const payload = {
+            roomId,
+            ...date,
+            guestFirstName: currentUser.firstname,
+            guestLastName: currentUser.lastname,
+            guestPhone: currentUser.phone,
+            bookingStatus: 2,
+        };
+        dispatch(createBooking(payload));
     };
 
     const handleSubmit = (data) => {
-        let filtered = [];
-        for (let i = 0; i < hotelRooms.length; i++) {
-            if (hotelRooms[i].day.length > 0) {
-                const freeRoom = isRoomAvailable(
-                    hotelRooms[i].day,
-                    data.dayOfArrival,
-                    data.dayOfDeparture
-                );
-                if (!freeRoom) {
-                    continue;
-                } else {
-                    filtered.push(hotelRooms[i]);
-                }
-            } else {
-                filtered.push(hotelRooms[i]);
-            }
-        }
-        setFilterRooms(filtered);
         setDate({
-            dayOfArrival: data.dayOfArrival,
-            dayOfDeparture: data.dayOfDeparture,
+            arrivalDate: data.arrivalDate,
+            departureDate: data.departureDate,
         });
     };
 
-    return (
+    return !hotelLoadingStatus ? (
         <>
             <h3 className="mb-3">
                 {`${hotel.name} ${hotel.star} `}
@@ -110,9 +98,17 @@ const HotelPage = () => {
             </div>
             <Calendar onSubmit={handleSubmit} />
             {filterRooms.map((room) => (
-                <RoomCard room={room} key={room._id} onClick={handleClick} />
+                <RoomCard
+                    roomId={room._id}
+                    key={room._id}
+                    onClick={handleClick}
+                />
             ))}
         </>
+    ) : (
+        <div className="spinner-border text-primary text-center" role="status">
+            <span className="visually-hidden">Loading...</span>
+        </div>
     );
 };
 

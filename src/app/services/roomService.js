@@ -1,6 +1,6 @@
 import httpService from "./httpService";
 
-const roomEndpoint = "room/";
+const roomEndpoint = "/room/";
 
 const roomService = {
     fetchAll: async () => {

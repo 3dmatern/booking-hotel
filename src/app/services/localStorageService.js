@@ -1,7 +1,7 @@
 const TOKEN_KEY = "jwt-token";
 const REFRESH_KEY = "jwt-refresh-token";
 const EXPIRES_KEY = "jwt-expires";
-const USERID_KEY = "user-local-id";
+const USERID_KEY = "userLocalId";
 
 export function setTokens({
     refreshToken,
@@ -25,7 +25,7 @@ export function getRefreshToken() {
 }
 
 export function getExpiresToken() {
-    localStorage.getItem(EXPIRES_KEY);
+    return localStorage.getItem(EXPIRES_KEY);
 }
 
 export function getUserId() {

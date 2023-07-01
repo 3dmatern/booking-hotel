@@ -21,9 +21,12 @@ const hotelsSlice = createSlice({
             state.isLoading = false;
         },
         hotelCreated: (state, action) => {
+            if (!Array.isArray(state.entities)) {
+                state.entities = [];
+            }
             state.entities.push(action.payload);
         },
-        hotelUpdate: (state, action) => {
+        hotelUpdated: (state, action) => {
             state.entities[
                 state.entities.findIndex((h) => h._id === action.payload._id)
             ] = action.payload;
@@ -42,14 +45,13 @@ const {
     hotelsReceived,
     hotelsReqFailed,
     hotelCreated,
-    hotelUpdate,
+    hotelUpdated,
     hotelRemoved,
 } = actions;
 
-const addHotelReq = createAction("hotels/addHotelReq");
+const createHotelReq = createAction("hotels/createHotelReq");
 const updateHotelReq = createAction("hotels/updateHotelReq");
-const updateHotelRoomsReq = createAction("hotels/updateHotelRoomsReq");
-const removeHotelReq = createAction("hotel/removeHotelReq");
+const removeHotelReq = createAction("hotels/removeHotelReq");
 
 export const loadHotelsList = () => async (dispatch) => {
     dispatch(hotelsReq());
@@ -62,7 +64,7 @@ export const loadHotelsList = () => async (dispatch) => {
 };
 
 export const createHotel = (payload) => async (dispatch) => {
-    dispatch(addHotelReq());
+    dispatch(createHotelReq());
     try {
         const { content } = await hotelService.create(payload);
         dispatch(hotelCreated(content));
@@ -71,30 +73,15 @@ export const createHotel = (payload) => async (dispatch) => {
     }
 };
 
-export const updateHotel = (payload) => async (dispatch) => {
+export const updateHotel = (hotelId, payload) => async (dispatch) => {
     dispatch(updateHotelReq());
     try {
-        const { content } = await hotelService.update(payload);
-        dispatch(hotelUpdate(content));
+        const { content } = await hotelService.update(hotelId, payload);
+        dispatch(hotelUpdated(content));
     } catch (error) {
         dispatch(hotelsReqFailed(error.message));
     }
 };
-
-export const updateHotelRooms =
-    (hotelId, roomId) => async (dispatch, getState) => {
-        const { entities } = getState().hotels;
-        const indexHotel = entities.findIndex((h) => h._id === hotelId);
-        dispatch(updateHotelRoomsReq());
-        try {
-            const { content } = await hotelService.update(hotelId, {
-                rooms: [...entities[indexHotel].rooms, roomId],
-            });
-            dispatch(hotelUpdate(content));
-        } catch (error) {
-            dispatch(hotelsReqFailed(error.message));
-        }
-    };
 
 export const removeHotel = (hotelId) => async (dispatch) => {
     dispatch(removeHotelReq());

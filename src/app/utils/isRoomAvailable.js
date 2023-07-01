@@ -1,9 +1,9 @@
-export function isRoomAvailable(days, startDate, endDate) {
-    for (let i = 0; i < days.length; i++) {
-        const booking = days[i];
+export function isRoomAvailable(rooms, startDate, endDate) {
+    for (let i = 0; i < rooms.length; i++) {
+        const booking = rooms[i];
         if (
-            startDate < booking.dayOfDeparture &&
-            endDate > booking.dayOfArrival
+            startDate < booking.departureDate &&
+            endDate > booking.arrivalDate
         ) {
             return false;
         }

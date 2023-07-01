@@ -1,6 +1,6 @@
 import httpService from "./httpService";
 
-const hotelEndpoint = "hotel/";
+const hotelEndpoint = "/hotel/";
 
 const hotelService = {
     fetchAll: async () => {

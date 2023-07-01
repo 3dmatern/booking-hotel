@@ -1,6 +1,6 @@
 import httpService from "./httpService";
 
-const reviewEndpoint = "comment/";
+const reviewEndpoint = "/comment/";
 
 const reviewService = {
     fetchAll: async () => {

@@ -8,13 +8,16 @@ export function splitGetTime(date) {
 }
 
 export function joinCurrentDate(d) {
-    const date = new Date();
+    let date = new Date();
+    if (d) {
+        date = new Date(Date.now() + d);
+    }
     const year = date.getFullYear();
     const month =
         date.getMonth() < 10
             ? "0" + (date.getMonth() + 1)
             : date.getMonth() + 1;
-    let day = d ? date.getDate() + d : date.getDate();
+    let day = date.getDate();
     day = day < 10 ? "0" + day : day;
     const joinDate = [year, month, day].join("-");
     return joinDate;

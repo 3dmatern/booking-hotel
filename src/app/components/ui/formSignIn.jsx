@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import TextField from "../common/form/textField";
 import Button from "../common/button";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";
 import { validator } from "../../utils/validator";
+import { useDispatch, useSelector } from "react-redux";
+import { getAuthErrors, signIn } from "../../store/users";
 
 const initialLogin = { email: "", password: "" };
 
 const FormSignIn = () => {
-    const { signIn } = useAuth();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const signInError = useSelector(getAuthErrors());
     const [data, setData] = useState(initialLogin);
     const [error, setError] = useState({});
-    const [enterError, setEnterError] = useState(true);
 
     const validatorConfig = {
         email: {
@@ -44,18 +46,12 @@ const FormSignIn = () => {
             ...prevState,
             [target.name]: target.value,
         }));
-        setEnterError(false);
     };
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-
-        try {
-            await signIn(data);
-        } catch (error) {
-            setEnterError(error.message);
-        }
+        dispatch(signIn({ payload: data, navigate }));
     };
     return (
         <form onSubmit={handleSubmit}>
@@ -79,7 +75,7 @@ const FormSignIn = () => {
                     error={error.password}
                 />
             </div>
-            {enterError && <p className="text-danger">{enterError}</p>}
+            {signInError && <p className="text-danger">{signInError}</p>}
             <div className="d-flex justify-content-between align-items-center mb-3">
                 <div>
                     Нет аккаунта?{" "}
@@ -88,11 +84,7 @@ const FormSignIn = () => {
                     </Link>
                 </div>
 
-                <Button
-                    className="success"
-                    name="Войти"
-                    disabled={!isValid || enterError}
-                />
+                <Button className="success" name="Войти" disabled={!isValid} />
             </div>
         </form>
     );

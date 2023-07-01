@@ -4,7 +4,6 @@ import FileField from "../common/form/fileField";
 import MultiSelectField from "../common/form/multiSelectField";
 import TextField from "../common/form/textField";
 import SelectField from "../common/form/selectField";
-import { useRoom } from "../../hooks/useRoom";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getFacilities,
@@ -12,17 +11,15 @@ import {
     loadFacilitiesList,
 } from "../../store/facilities";
 import { getHotels } from "../../store/hotels";
-import { updateHotelRooms } from "../../store/hotels";
+import { createRoom } from "../../store/rooms";
 
 const FormCreateRoom = () => {
     const dispatch = useDispatch();
     const facilities = useSelector(getFacilities());
     const facilitiesLoading = useSelector(getFacilitiesLoadingStatus());
-    const { create } = useRoom();
     const hotels = useSelector(getHotels());
     const [data, setData] = useState({
         hotelId: "",
-        numberRoom: 1,
         name: "",
         info: "",
         breakfest: "",
@@ -67,8 +64,8 @@ const FormCreateRoom = () => {
             formData.append("images", file[index]);
             return f;
         });
-        const newRoom = await create(formData);
-        dispatch(updateHotelRooms(data.hotelId, newRoom._id));
+        const newRoom = dispatch(createRoom(formData));
+        // dispatch(updateHotelRooms(data.hotelId, newRoom._id));
     };
 
     if (facilitiesLoading) return "Loading...";
@@ -85,18 +82,6 @@ const FormCreateRoom = () => {
                     value={data.hotelId}
                     options={hotelsSelect()}
                     onChange={handleChange}
-                />
-            </div>
-            <div className="mb-3">
-                <TextField
-                    label="Номер комнаты"
-                    type="number"
-                    name="numberRoom"
-                    value={data.numberRoom}
-                    min="0"
-                    step="1"
-                    onChange={handleChange}
-                    error={error.numberRoom}
                 />
             </div>
             <div className="mb-3">

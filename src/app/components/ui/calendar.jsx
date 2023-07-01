@@ -6,8 +6,8 @@ import Button from "../common/button";
 
 const Calendar = ({ onSubmit }) => {
     const [data, setData] = useState({
-        dayOfArrival: joinCurrentDate(),
-        dayOfDeparture: joinCurrentDate(2),
+        arrivalDate: joinCurrentDate(),
+        departureDate: joinCurrentDate(172800000),
         numberOfPersons: "2",
     });
 
@@ -35,8 +35,8 @@ const Calendar = ({ onSubmit }) => {
                     <TextField
                         label="Заезд"
                         type="date"
-                        name="dayOfArrival"
-                        value={data.dayOfArrival}
+                        name="arrivalDate"
+                        value={data.arrivalDate}
                         min={joinCurrentDate()}
                         onChange={handleChange}
                     />
@@ -45,9 +45,9 @@ const Calendar = ({ onSubmit }) => {
                     <TextField
                         label="Выезд"
                         type="date"
-                        name="dayOfDeparture"
-                        value={data.dayOfDeparture}
-                        min={data.dayOfArrival}
+                        name="departureDate"
+                        value={data.departureDate}
+                        min={data.arrivalDate}
                         onChange={handleChange}
                     />
                 </div>

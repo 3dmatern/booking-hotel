@@ -1,10 +1,13 @@
 import React, { useEffect } from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { logOut } from "../store/users";
+import { useNavigate } from "react-router-dom";
 
 const Logout = () => {
-    const { logOut } = useAuth();
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
     useEffect(() => {
-        logOut();
+        dispatch(logOut(navigate));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     return (

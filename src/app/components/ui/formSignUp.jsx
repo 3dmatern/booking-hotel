@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import TextField from "../common/form/textField";
 import Button from "../common/button";
-import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";
 import { validator } from "../../utils/validator";
+import { useDispatch } from "react-redux";
+import { signUp } from "../../store/users";
 
 const initialRegister = {
     firstname: "",
@@ -13,7 +14,8 @@ const initialRegister = {
 };
 
 const FormSignUp = () => {
-    const { signUp } = useAuth();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const [data, setData] = useState(initialRegister);
     const [error, setError] = useState({});
     const [enterError, setEnterError] = useState(true);
@@ -81,16 +83,13 @@ const FormSignUp = () => {
         setEnterError(false);
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        try {
-            await signUp({ ...data });
-        } catch (error) {
-            setError(error);
-        }
+        dispatch(signUp({ payload: data, navigate }));
     };
+
     return (
         <form onSubmit={handleSubmit}>
             <div className="mb-3">
