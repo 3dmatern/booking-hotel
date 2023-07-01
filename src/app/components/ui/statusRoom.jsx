@@ -37,16 +37,18 @@ const StatusRoom = () => {
             !hotelsLoadingStatus
         ) {
             let data = [];
-            booking.map((item) => {
-                const { name: roomName, hotelId } = rooms.find(
-                    (r) => r._id === item.roomId
-                );
-                const { name: hotelName } = hotels.find(
-                    (h) => h._id === hotelId
-                );
-                data.push({ hotelName, roomName, ...item });
-                return item;
-            });
+            // booking.map((item) => {
+            booking &&
+                booking.map((item) => {
+                    const { name: roomName, hotelId } = rooms.find(
+                        (r) => r._id === item.roomId
+                    );
+                    const { name: hotelName } = hotels.find(
+                        (h) => h._id === hotelId
+                    );
+                    data.push({ hotelName, roomName, ...item });
+                    return item;
+                });
             setData(data);
         }
     }, [

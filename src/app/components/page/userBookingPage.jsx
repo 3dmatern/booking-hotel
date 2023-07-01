@@ -17,9 +17,9 @@ const UserBookingPage = () => {
 
     useEffect(() => {
         if (currentUser && !bookingLoadingStatus) {
-            const userBookingRoom = booking.filter(
-                (b) => b.guestPhone === currentUser.phone
-            );
+            const userBookingRoom =
+                booking &&
+                booking.filter((b) => b.guestPhone === currentUser.phone);
             setUserBooking(userBookingRoom);
         }
     }, [currentUser, bookingLoadingStatus, booking]);
@@ -30,22 +30,23 @@ const UserBookingPage = () => {
 
     return !bookingLoadingStatus ? (
         <>
-            {userBooking.map((booking, index) => {
-                const { arrivalDate, departureDate } = booking;
-                return (
-                    <RoomCard
-                        date={{
-                            arrivalDate,
-                            departureDate,
-                        }}
-                        bookingId={booking._id}
-                        roomId={booking.roomId}
-                        key={booking._id + index}
-                        close={true}
-                        onClick={handleClick}
-                    />
-                );
-            })}
+            {userBooking &&
+                userBooking.map((booking, index) => {
+                    const { arrivalDate, departureDate } = booking;
+                    return (
+                        <RoomCard
+                            date={{
+                                arrivalDate,
+                                departureDate,
+                            }}
+                            bookingId={booking._id}
+                            roomId={booking.roomId}
+                            key={booking._id + index}
+                            close={true}
+                            onClick={handleClick}
+                        />
+                    );
+                })}
         </>
     ) : (
         <div className="spinner-border text-primary text-center" role="status">

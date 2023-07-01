@@ -1,5 +1,6 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import bookingService from "../services/bookingService";
+import api from "../api";
 
 const bookingSlice = createSlice({
     name: "booking",
@@ -56,7 +57,9 @@ const removeBookingReq = createAction("booking/removeBookingReq");
 export const loadBookingList = () => async (dispatch) => {
     dispatch(bookingReq());
     try {
-        const { content } = await bookingService.get();
+        const content = api.booking.get();
+        console.log(content.length);
+        // const { content } = await bookingService.get();
         dispatch(bookingReceived(content));
     } catch (error) {
         dispatch(bookingReqFailed(error.message));
@@ -66,7 +69,8 @@ export const loadBookingList = () => async (dispatch) => {
 export const createBooking = (payload) => async (dispatch) => {
     dispatch(createBookingReq());
     try {
-        const { content } = await bookingService.create(payload);
+        const content = await api.booking.create(payload);
+        // const { content } = await bookingService.create(payload);
         dispatch(bookingCreated(content));
     } catch (error) {
         dispatch(bookingReqFailed(error.message));
@@ -86,7 +90,8 @@ export const updateBooking = (bookingId, payload) => async (dispatch) => {
 export const removeBooking = (bookingId) => async (dispatch) => {
     dispatch(removeBookingReq());
     try {
-        const { content } = await bookingService.delete(bookingId);
+        const content = await api.booking.remove(bookingId);
+        // const { content } = await bookingService.delete(bookingId);
         if (content === null) {
             dispatch(bookingRemoved(bookingId));
         }

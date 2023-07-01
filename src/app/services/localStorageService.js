@@ -39,6 +39,11 @@ export function removeAuthData() {
     localStorage.removeItem(EXPIRES_KEY);
 }
 
+// Для работы с api
+export function setUserId(userId) {
+    localStorage.setItem(USERID_KEY, userId);
+}
+
 const localStorageService = {
     setTokens,
     getAccessToken,
@@ -46,6 +51,7 @@ const localStorageService = {
     getExpiresToken,
     getUserId,
     removeAuthData,
+    setUserId,
 };
 
 export default localStorageService;

@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import facilitiService from "../services/facilitiService";
+import api from "../api";
 
 const facilitiesSlice = createSlice({
     name: "facilities",
@@ -40,7 +41,8 @@ export const loadFacilitiesList = () => async (dispatch, getState) => {
     if (isOutDated(lastFetch)) {
         dispatch(facilitiesReq());
         try {
-            const { content } = await facilitiService.get();
+            const content = await api.faciliti.get();
+            // const { content } = await facilitiService.get();
             dispatch(facilitiesReceived(content));
         } catch (error) {
             dispatch(facilitiesReqFailed(error.message));

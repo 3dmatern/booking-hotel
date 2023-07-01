@@ -1,5 +1,6 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import hotelService from "../services/hotelService";
+import api from "../api";
 
 const hotelsSlice = createSlice({
     name: "hotels",
@@ -56,27 +57,33 @@ const removeHotelReq = createAction("hotels/removeHotelReq");
 export const loadHotelsList = () => async (dispatch) => {
     dispatch(hotelsReq());
     try {
-        const { content } = await hotelService.fetchAll();
+        const content = await api.hotels.get();
+        // const { content } = await hotelService.fetchAll();
         dispatch(hotelsReceived(content));
     } catch (error) {
         dispatch(hotelsReqFailed(error.message));
     }
 };
 
-export const createHotel = (payload) => async (dispatch) => {
-    dispatch(createHotelReq());
-    try {
-        const { content } = await hotelService.create(payload);
-        dispatch(hotelCreated(content));
-    } catch (error) {
-        dispatch(hotelsReqFailed(error.message));
-    }
-};
+export const createHotel =
+    ({ formData, navigate }) =>
+    async (dispatch) => {
+        dispatch(createHotelReq());
+        try {
+            const content = await api.hotels.create(formData);
+            // const { content } = await hotelService.create(payload);
+            dispatch(hotelCreated(content));
+            navigate("/admin");
+        } catch (error) {
+            dispatch(hotelsReqFailed(error.message));
+        }
+    };
 
 export const updateHotel = (hotelId, payload) => async (dispatch) => {
     dispatch(updateHotelReq());
     try {
-        const { content } = await hotelService.update(hotelId, payload);
+        const content = await api.hotels.update(hotelId, payload);
+        // const { content } = await hotelService.update(hotelId, payload);
         dispatch(hotelUpdated(content));
     } catch (error) {
         dispatch(hotelsReqFailed(error.message));

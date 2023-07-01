@@ -11,24 +11,28 @@ import {
     loadFacilitiesList,
 } from "../../store/facilities";
 import { createHotel } from "../../store/hotels";
+import { useNavigate } from "react-router-dom";
+
+const initialState = {
+    name: "",
+    star: 3,
+    address: "",
+    description: "",
+    facilities: [],
+};
 
 const FormCreateHotel = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const facilities = useSelector(getFacilities());
     const facilitiesLoading = useSelector(getFacilitiesLoadingStatus());
+    const [data, setData] = useState(initialState);
+    const [file, setFile] = useState(null);
+    const [error, setError] = useState({});
+
     useEffect(() => {
         dispatch(loadFacilitiesList());
     }, []);
-
-    const [data, setData] = useState({
-        name: "",
-        star: 3,
-        address: "",
-        description: "",
-        facilities: [],
-    });
-    const [file, setFile] = useState(null);
-    const [error, setError] = useState({});
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -48,7 +52,7 @@ const FormCreateHotel = () => {
             formData.append("images", file[index]);
             return f;
         });
-        dispatch(createHotel(formData));
+        dispatch(createHotel({ formData, navigate }));
     };
 
     if (facilitiesLoading) return "Loading...";

@@ -20,7 +20,6 @@ const authService = {
             grant_type: "refreshToken",
             refresh_token: localStorageService.getRefreshToken(),
         });
-        console.log(data);
         return data;
     },
 };

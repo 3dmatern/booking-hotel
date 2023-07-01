@@ -1,31 +1,31 @@
 const users = [
     {
-        _id: 1,
+        _id: "1",
         firstname: "Админ",
         lastname: "Админский",
         role: "ADMIN",
         email: "admin@mail.ru",
         password: "Test1234",
+        phone: "+375441234567",
         image: "https://avatars.dicebear.com/api/avataaars/mdqeq.svg",
-        rooms: [1, 10, 11],
     },
     {
-        _id: 2,
+        _id: "2",
         firstname: "Тест",
         lastname: "Тестовский",
         role: "USER",
         email: "test@mail.ru",
         password: "Test1234",
+        phone: "+375447654321",
         image: "https://avatars.dicebear.com/api/avataaars/kxhav.svg",
-        rooms: [2, 4, 9],
     },
 ];
 
-// if (!localStorage.getItem("users")) {
-//     localStorage.setItem("users", JSON.stringify(users));
-// }
+if (!localStorage.getItem("users")) {
+    localStorage.setItem("users", JSON.stringify(users));
+}
 
-const create = (payload) =>
+const post = (payload) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             const users = JSON.parse(localStorage.getItem("users"));
@@ -37,7 +37,6 @@ const create = (payload) =>
                 )
                     .toString(36)
                     .substring(7)}.svg`,
-                rooms: [],
                 ...payload,
             };
             users.push(newUser);
@@ -46,14 +45,14 @@ const create = (payload) =>
         }, 1000);
     });
 
-const fetchAll = () =>
+const get = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             resolve(JSON.parse(localStorage.getItem("users")));
         }, 1000);
     });
 
-const getUser = (email, password) =>
+const getUser = ({ email, password }) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             resolve(
@@ -63,6 +62,7 @@ const getUser = (email, password) =>
             );
         }, 1000);
     });
+
 const getUserById = (id) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
@@ -74,36 +74,10 @@ const getUserById = (id) =>
         }, 1000);
     });
 
-const addRoom = (userId, roomId) =>
-    new Promise((resolve) => {
-        window.setTimeout(function () {
-            const users = JSON.parse(localStorage.getItem("users"));
-            const userIndex = users.findIndex((user) => user._id === userId);
-            users[userIndex].rooms.push(roomId);
-            localStorage.setItem("users", JSON.stringify(users));
-            resolve(users[userIndex]);
-        }, 1000);
-    });
-
-const clearRoom = (userId, roomId) =>
-    new Promise((resolve) => {
-        window.setTimeout(function () {
-            const users = JSON.parse(localStorage.getItem("users"));
-            const userIndex = users.findIndex((u) => u._id === userId);
-            users[userIndex].rooms = users[userIndex].rooms.filter(
-                (r) => r !== roomId
-            );
-            localStorage.setItem("users", JSON.stringify(users));
-            resolve(users[userIndex]);
-        }, 1000);
-    });
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    create,
-    fetchAll,
+    post,
+    get,
     getUser,
     getUserById,
-    addRoom,
-    clearRoom,
 };

@@ -28,9 +28,10 @@ const HotelPage = () => {
     const bookingLoadingStatus = useSelector(getBookingLoadingStatus());
     const [filterRooms, setFilterRooms] = useState([]);
     const [date, setDate] = useState({});
-
+    console.log(hotel);
+    console.log(rooms);
     useEffect(() => {
-        if (!roomsLoadingStatus && !bookingLoadingStatus) {
+        if (!roomsLoadingStatus && !bookingLoadingStatus && rooms) {
             const filtered = rooms.filter(
                 (room) =>
                     room &&
@@ -92,7 +93,7 @@ const HotelPage = () => {
                         </div>
                     </div>
                     <div className="d-flex justify-content-between">
-                        <FacilitiesList facilities={hotel.services} />
+                        <FacilitiesList facilities={hotel.facilities} />
                     </div>
                 </div>
             </div>

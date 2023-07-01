@@ -1,5 +1,6 @@
 import { createAction, createSlice } from "@reduxjs/toolkit";
 import roomService from "../services/roomService";
+import api from "../api";
 
 const roomsSlice = createSlice({
     name: "rooms",
@@ -56,22 +57,27 @@ const removeRoomReq = createAction("rooms/removeRoomReq");
 export const loadRoomsList = () => async (dispatch) => {
     dispatch(roomsReq());
     try {
-        const { content } = await roomService.fetchAll();
+        const content = await api.rooms.get();
+        // const { content } = await roomService.fetchAll();
         dispatch(roomsReceived(content));
     } catch (error) {
         dispatch(roomsReqFailed(error.message));
     }
 };
 
-export const createRoom = (payload) => async (dispatch) => {
-    dispatch(createRoomReq());
-    try {
-        const { content } = await roomService.create(payload);
-        dispatch(roomCreate(content));
-    } catch (error) {
-        dispatch(roomsReqFailed(error.message));
-    }
-};
+export const createRoom =
+    ({ formData, navigate }) =>
+    async (dispatch) => {
+        dispatch(createRoomReq());
+        try {
+            const content = await api.rooms.create(formData);
+            // const { content } = await roomService.create(payload);
+            dispatch(roomCreate(content));
+            navigate("/admin");
+        } catch (error) {
+            dispatch(roomsReqFailed(error.message));
+        }
+    };
 
 export const updateRoom = (roomId, payload) => async (dispatch) => {
     dispatch(updateRoomReq());

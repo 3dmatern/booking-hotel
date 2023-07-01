@@ -3,8 +3,10 @@ import userService from "../services/userService";
 import authService from "../services/authService";
 import localStorageService from "../services/localStorageService";
 import { generateAuthError } from "../utils/generateAuthError";
+import api from "../api";
 
-const initialState = localStorageService.getAccessToken()
+// const initialState = localStorageService.getAccessToken()
+const initialState = localStorageService.getUserId()
     ? {
           entities: null,
           isLoading: true,
@@ -77,9 +79,11 @@ export const signIn =
     async (dispatch) => {
         dispatch(authReq());
         try {
-            const data = await authService.login(payload);
-            localStorageService.setTokens(data);
-            dispatch(authReqSuccess(data));
+            const data = await api.users.getUser(payload);
+            localStorageService.setUserId(data._id);
+            // const data = await authService.login(payload);
+            // localStorageService.setTokens(data);
+            dispatch(authReqSuccess({ userId: data._id }));
             navigate(-1);
         } catch (error) {
             const { code, message } = error.response.data.error;
@@ -98,9 +102,11 @@ export const signUp =
     async (dispatch) => {
         dispatch(authReq());
         try {
-            const data = await authService.register(payload);
-            localStorageService.setTokens(data);
-            dispatch(authReqSuccess(data));
+            const data = await api.users.getUser(payload);
+            localStorageService.setUserId(data._id);
+            // const data = await authService.register(payload);
+            // localStorageService.setTokens(data);
+            dispatch(authReqSuccess({ userId: data._id }));
             navigate("/");
         } catch (error) {
             dispatch(authReqFailed(error.message));
@@ -116,14 +122,15 @@ export const logOut = (navigate) => (dispatch) => {
 export const loadUsersList = () => async (dispatch) => {
     dispatch(usersReq());
     try {
-        const { content } = await userService.get();
+        const content = await api.users.get();
+        // const { content } = await userService.get();
         dispatch(usersReceived(content));
     } catch (error) {
         dispatch(usersReqFailed(error.message));
     }
 };
 
-export const updateBooking = (userId, payload) => async (dispatch) => {
+export const updateUser = (userId, payload) => async (dispatch) => {
     dispatch(updateUserReq());
     try {
         const { content } = await userService.update(userId, payload);

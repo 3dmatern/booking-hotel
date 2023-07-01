@@ -4,13 +4,8 @@ import NavbarAdmin from "../ui/navbarAdmin";
 import StatusRoom from "../ui/statusRoom";
 import FormCreateHotel from "../ui/formCreateHotel";
 import FormCreateRoom from "../ui/formCreateRoom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getCurrentUser, getUsersLoadingStatus } from "../../store/users";
-import {
-    getBooking,
-    getBookingLoadingStatus,
-    removeBooking,
-} from "../../store/booking";
 
 const AdminStatusRoom = () => {
     const navigate = useNavigate();

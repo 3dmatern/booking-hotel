@@ -12,8 +12,10 @@ import {
 } from "../../store/facilities";
 import { getHotels } from "../../store/hotels";
 import { createRoom } from "../../store/rooms";
+import { useNavigate } from "react-router-dom";
 
 const FormCreateRoom = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const facilities = useSelector(getFacilities());
     const facilitiesLoading = useSelector(getFacilitiesLoadingStatus());
@@ -29,15 +31,17 @@ const FormCreateRoom = () => {
     });
     const [file, setFile] = useState();
     const [error, setError] = useState({});
+    const [options, setOptions] = useState([]);
 
     useEffect(() => {
         dispatch(loadFacilitiesList());
     }, []);
 
-    const hotelsSelect = () => {
-        const options = hotels.map((h) => ({ label: h.name, value: h._id }));
-        return options;
-    };
+    useEffect(() => {
+        if (!facilitiesLoading && hotels) {
+            setOptions(hotels.map((h) => ({ label: h.name, value: h._id })));
+        }
+    }, [facilitiesLoading, hotels]);
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -64,8 +68,7 @@ const FormCreateRoom = () => {
             formData.append("images", file[index]);
             return f;
         });
-        const newRoom = dispatch(createRoom(formData));
-        // dispatch(updateHotelRooms(data.hotelId, newRoom._id));
+        dispatch(createRoom({ formData, navigate }));
     };
 
     if (facilitiesLoading) return "Loading...";
@@ -80,7 +83,7 @@ const FormCreateRoom = () => {
                     label="Выберите отель"
                     name="hotelId"
                     value={data.hotelId}
-                    options={hotelsSelect()}
+                    options={options}
                     onChange={handleChange}
                 />
             </div>
