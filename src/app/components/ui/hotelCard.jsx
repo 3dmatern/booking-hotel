@@ -23,7 +23,11 @@ const HotelCard = ({ id, name, star, rate, image, userBooking }) => {
                     </button>
                 </div>
             )}
-            <img src={image} className="card-img-top h-100" alt={name} />
+            <img
+                src={`/image/hotels/${image}.webp`}
+                className="card-img-top h-100"
+                alt={name}
+            />
             <div className="card-img-overlay text-center">
                 <p className="text-start mb-5">
                     <span className="badge text-bg-primary text-light">

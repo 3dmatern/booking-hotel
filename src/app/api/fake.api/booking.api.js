@@ -1,4 +1,15 @@
-const booking = [];
+const booking = [
+    {
+        _id: "1",
+        roomId: "1",
+        arrivalDate: "2023-07-02",
+        departureDate: "2023-07-04",
+        guestFirstName: "Admin",
+        guestLastName: "Adminskiy",
+        guestPhone: "+375441234567",
+        bookingStatus: 2,
+    },
+];
 
 if (!localStorage.getItem("booking")) {
     localStorage.setItem("booking", JSON.stringify(booking));
@@ -9,31 +20,31 @@ const create = (payload) =>
         window.setTimeout(function () {
             const booking = JSON.parse(localStorage.getItem("booking"));
             const newBooking = {
-                _id: booking.length + 1,
+                _id: String(booking.length + 1),
                 ...payload,
             };
             booking.push(newBooking);
             localStorage.setItem("booking", JSON.stringify(booking));
             resolve(newBooking);
-        }, 1000);
+        }, 200);
     });
 
-const get = () => {
+const get = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             resolve(JSON.parse(localStorage.getItem("booking")));
-        }, 1000);
+        }, 200);
     });
-};
 
-const remove = (bookingId) => {
+const remove = (bookingId) =>
     new Promise((resolve) => {
-        const booking = JSON.parse(localStorage.getItem("booking"));
-        const updateBooking = booking.filter((b) => b._id !== bookingId);
-        JSON.stringify("booking", updateBooking);
-        resolve(null);
+        window.setTimeout(function () {
+            const booking = JSON.parse(localStorage.getItem("booking"));
+            const newBooking = booking.filter((b) => b._id !== bookingId);
+            localStorage.setItem("booking", JSON.stringify(newBooking));
+            resolve(null);
+        }, 200);
     });
-};
 
 export default {
     create,

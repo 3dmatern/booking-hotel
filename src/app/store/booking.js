@@ -57,8 +57,7 @@ const removeBookingReq = createAction("booking/removeBookingReq");
 export const loadBookingList = () => async (dispatch) => {
     dispatch(bookingReq());
     try {
-        const content = api.booking.get();
-        console.log(content.length);
+        const content = await api.booking.get();
         // const { content } = await bookingService.get();
         dispatch(bookingReceived(content));
     } catch (error) {

@@ -1,4 +1,4 @@
-export const faciliti = [
+const faciliti = [
     {
         _id: "6499a3cde0af63f1d5d292aa",
         value: "wifi",
@@ -41,7 +41,7 @@ const get = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             resolve(JSON.parse(localStorage.getItem("faciliti")));
-        }, 1000);
+        }, 200);
     });
 
 export default { get };

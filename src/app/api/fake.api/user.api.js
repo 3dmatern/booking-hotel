@@ -25,7 +25,7 @@ if (!localStorage.getItem("users")) {
     localStorage.setItem("users", JSON.stringify(users));
 }
 
-const post = (payload) =>
+const create = (payload) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             const users = JSON.parse(localStorage.getItem("users"));
@@ -42,14 +42,14 @@ const post = (payload) =>
             users.push(newUser);
             localStorage.setItem("users", JSON.stringify(users));
             resolve(newUser);
-        }, 1000);
+        }, 200);
     });
 
 const get = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             resolve(JSON.parse(localStorage.getItem("users")));
-        }, 1000);
+        }, 200);
     });
 
 const getUser = ({ email, password }) =>
@@ -60,7 +60,7 @@ const getUser = ({ email, password }) =>
                     (u) => u.email === email && u.password === password
                 )
             );
-        }, 1000);
+        }, 200);
     });
 
 const getUserById = (id) =>
@@ -71,12 +71,12 @@ const getUserById = (id) =>
                     (u) => u._id === id
                 )
             );
-        }, 1000);
+        }, 200);
     });
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-    post,
+    create,
     get,
     getUser,
     getUserById,

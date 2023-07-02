@@ -102,7 +102,7 @@ export const signUp =
     async (dispatch) => {
         dispatch(authReq());
         try {
-            const data = await api.users.getUser(payload);
+            const data = await api.users.create(payload);
             localStorageService.setUserId(data._id);
             // const data = await authService.register(payload);
             // localStorageService.setTokens(data);

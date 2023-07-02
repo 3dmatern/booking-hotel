@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import RoomCard from "../ui/roomCard";
 import Calendar from "../ui/calendar";
 import { isRoomAvailable } from "../../utils/isRoomAvailable";
@@ -17,6 +17,7 @@ import { getHotelsLoadingStatus } from "../../store/hotels";
 import { getRoomsLoadingStatus } from "../../store/rooms";
 
 const HotelPage = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { hotelId } = useParams();
     const currentUser = useSelector(getCurrentUser());
@@ -28,10 +29,9 @@ const HotelPage = () => {
     const bookingLoadingStatus = useSelector(getBookingLoadingStatus());
     const [filterRooms, setFilterRooms] = useState([]);
     const [date, setDate] = useState({});
-    console.log(hotel);
-    console.log(rooms);
+
     useEffect(() => {
-        if (!roomsLoadingStatus && !bookingLoadingStatus && rooms) {
+        if (!roomsLoadingStatus && !bookingLoadingStatus) {
             const filtered = rooms.filter(
                 (room) =>
                     room &&
@@ -43,9 +43,10 @@ const HotelPage = () => {
             );
             setFilterRooms(filtered);
         }
-    }, [roomsLoadingStatus, bookingLoadingStatus, date, booking]);
+    }, [roomsLoadingStatus, bookingLoadingStatus, booking, date]);
 
     const handleClick = (roomId) => {
+        if (!currentUser) return navigate("/sign");
         const payload = {
             roomId,
             ...date,
@@ -100,8 +101,8 @@ const HotelPage = () => {
             <Calendar onSubmit={handleSubmit} />
             {filterRooms.map((room) => (
                 <RoomCard
-                    roomId={room._id}
                     key={room._id}
+                    roomId={room._id}
                     onClick={handleClick}
                 />
             ))}

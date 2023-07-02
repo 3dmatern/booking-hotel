@@ -24,7 +24,6 @@ const HotelsListPage = () => {
                             id={hotel._id}
                             name={hotel.name}
                             star={hotel.star}
-                            rate={hotel.rate}
                             image={hotel.image}
                         />
                     ))}

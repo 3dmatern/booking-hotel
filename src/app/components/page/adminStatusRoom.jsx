@@ -14,9 +14,8 @@ const AdminStatusRoom = () => {
 
     useEffect(() => {
         if (
-            usersLoadingStatus &&
-            !currentUser &&
-            currentUser.role !== "ADMIN"
+            !usersLoadingStatus &&
+            (!currentUser || currentUser.role !== "ADMIN")
         ) {
             navigate("/");
         }
