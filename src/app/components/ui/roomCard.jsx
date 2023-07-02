@@ -7,7 +7,6 @@ import { getRoomById, getRoomsLoadingStatus } from "../../store/rooms";
 const RoomCard = ({ date, bookingId, roomId, close, onClick }) => {
     const room = useSelector(getRoomById(roomId));
     const roomsLoadingStatus = useSelector(getRoomsLoadingStatus());
-    console.log(room.facilities);
 
     return !roomsLoadingStatus ? (
         <div className="card mb-3 mx-auto">
