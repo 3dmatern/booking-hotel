@@ -7,7 +7,7 @@ const booking = [
         guestFirstName: "Admin",
         guestLastName: "Adminskiy",
         guestPhone: "+375441234567",
-        bookingStatus: 2,
+        bookingStatus: 1,
     },
 ];
 

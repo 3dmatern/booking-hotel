@@ -3,8 +3,16 @@ import Button from "../common/button";
 import FacilitiesList from "./facilities/facilitiesList";
 import { useSelector } from "react-redux";
 import { getRoomById, getRoomsLoadingStatus } from "../../store/rooms";
+import { Link } from "react-router-dom";
 
-const RoomCard = ({ date, bookingId, roomId, close, onClick }) => {
+const HotelRoomCard = ({
+    date,
+    dateParam,
+    bookingId,
+    roomId,
+    close,
+    onClick,
+}) => {
     const room = useSelector(getRoomById(roomId));
     const roomsLoadingStatus = useSelector(getRoomsLoadingStatus());
 
@@ -96,11 +104,14 @@ const RoomCard = ({ date, bookingId, roomId, close, onClick }) => {
                                     onClick={() => onClick(bookingId)}
                                 />
                             ) : (
-                                <Button
-                                    className="warning"
-                                    name="Забронировать"
-                                    onClick={() => onClick(room._id)}
-                                />
+                                <>
+                                    <Link
+                                        className="btn btn-warning"
+                                        to={`${room._id}?arrivalDate=${dateParam.arrivalDate}&departureDate=${dateParam.departureDate}`}
+                                    >
+                                        Выбрать
+                                    </Link>
+                                </>
                             )}
                         </div>
                     </div>
@@ -114,4 +125,4 @@ const RoomCard = ({ date, bookingId, roomId, close, onClick }) => {
     );
 };
 
-export default RoomCard;
+export default HotelRoomCard;

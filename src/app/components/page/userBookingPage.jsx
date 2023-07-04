@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import RoomCard from "../ui/roomCard";
+import HotelRoomCard from "../ui/hotelRoomCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../store/users";
 import {
@@ -34,7 +34,7 @@ const UserBookingPage = () => {
                 userBooking.map((booking, index) => {
                     const { arrivalDate, departureDate } = booking;
                     return (
-                        <RoomCard
+                        <HotelRoomCard
                             date={{
                                 arrivalDate,
                                 departureDate,

@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import RoomCard from "../ui/roomCard";
+import { useParams } from "react-router-dom";
+import HotelRoomCard from "../ui/hotelRoomCard";
 import Calendar from "../ui/calendar";
 import { isRoomAvailable } from "../../utils/isRoomAvailable";
 import FacilitiesList from "../ui/facilities/facilitiesList";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getHotelById } from "../../store/hotels";
 import { getRoomCurrentHotel } from "../../store/rooms";
-import {
-    createBooking,
-    getBooking,
-    getBookingLoadingStatus,
-} from "../../store/booking";
-import { getCurrentUser } from "../../store/users";
+import { getBooking, getBookingLoadingStatus } from "../../store/booking";
 import { getHotelsLoadingStatus } from "../../store/hotels";
 import { getRoomsLoadingStatus } from "../../store/rooms";
 
 const HotelPage = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
     const { hotelId } = useParams();
-    const currentUser = useSelector(getCurrentUser());
     const hotel = useSelector(getHotelById(hotelId));
     const hotelLoadingStatus = useSelector(getHotelsLoadingStatus());
     const rooms = useSelector(getRoomCurrentHotel(hotelId));
@@ -44,19 +36,6 @@ const HotelPage = () => {
             setFilterRooms(filtered);
         }
     }, [roomsLoadingStatus, bookingLoadingStatus, booking, date]);
-
-    const handleClick = (roomId) => {
-        if (!currentUser) return navigate("/sign");
-        const payload = {
-            roomId,
-            ...date,
-            guestFirstName: currentUser.firstname,
-            guestLastName: currentUser.lastname,
-            guestPhone: currentUser.phone,
-            bookingStatus: 2,
-        };
-        dispatch(createBooking(payload));
-    };
 
     const handleSubmit = (data) => {
         setDate({
@@ -82,7 +61,7 @@ const HotelPage = () => {
                     <div className="col mb-3">
                         <div className="ps-3">
                             <img
-                                src={hotel.image}
+                                src={`/image/hotels/${hotel.image}.webp`}
                                 alt={hotel.name}
                                 width={600}
                             />
@@ -100,10 +79,10 @@ const HotelPage = () => {
             </div>
             <Calendar onSubmit={handleSubmit} />
             {filterRooms.map((room) => (
-                <RoomCard
+                <HotelRoomCard
                     key={room._id}
                     roomId={room._id}
-                    onClick={handleClick}
+                    dateParam={date}
                 />
             ))}
         </>
