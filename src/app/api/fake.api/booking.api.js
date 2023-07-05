@@ -36,12 +36,16 @@ const get = () =>
         }, 200);
     });
 
-const remove = (bookingId) =>
+const update = (bookingId) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             const booking = JSON.parse(localStorage.getItem("booking"));
-            const newBooking = booking.filter((b) => b._id !== bookingId);
-            localStorage.setItem("booking", JSON.stringify(newBooking));
+            const bookingIndex = booking.findIndex((b) => b._id === bookingId);
+            booking[bookingIndex] = {
+                ...booking[bookingIndex],
+                bookingStatus: 0,
+            };
+            localStorage.setItem("booking", JSON.stringify(booking));
             resolve(null);
         }, 200);
     });
@@ -49,5 +53,5 @@ const remove = (bookingId) =>
 export default {
     create,
     get,
-    remove,
+    update,
 };

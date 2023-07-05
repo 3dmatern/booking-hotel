@@ -12,23 +12,26 @@ const UserBookingPage = () => {
     const dispatch = useDispatch();
     const currentUser = useSelector(getCurrentUser());
     const booking = useSelector(getBooking());
-    const bookingLoadingStatus = useSelector(getBookingLoadingStatus());
     const [userBooking, setUserBooking] = useState([]);
 
     useEffect(() => {
-        if (currentUser && !bookingLoadingStatus) {
+        if (currentUser && booking) {
             const userBookingRoom =
                 booking &&
-                booking.filter((b) => b.guestPhone === currentUser.phone);
+                booking.filter(
+                    (b) =>
+                        b.guestPhone === currentUser.phone &&
+                        b.bookingStatus === 1
+                );
             setUserBooking(userBookingRoom);
         }
-    }, [currentUser, bookingLoadingStatus, booking]);
+    }, [currentUser, booking]);
 
     const handleClick = (bookingId) => {
         dispatch(removeBooking(bookingId));
     };
 
-    return !bookingLoadingStatus ? (
+    return booking ? (
         <>
             {userBooking &&
                 userBooking.map((booking, index) => {

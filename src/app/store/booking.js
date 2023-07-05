@@ -90,7 +90,7 @@ export const updateBooking = (bookingId, payload) => async (dispatch) => {
 export const removeBooking = (bookingId) => async (dispatch) => {
     dispatch(removeBookingReq());
     try {
-        const content = await api.booking.remove(bookingId);
+        const content = await api.booking.update(bookingId);
         // const { content } = await bookingService.delete(bookingId);
         if (content === null) {
             dispatch(bookingRemoved(bookingId));

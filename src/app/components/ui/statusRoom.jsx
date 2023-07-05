@@ -40,6 +40,7 @@ const StatusRoom = () => {
             // booking.map((item) => {
             booking &&
                 booking.map((item) => {
+                    if (item.bookingStatus === 0) return data;
                     const { name: roomName, hotelId } = rooms.find(
                         (r) => r._id === item.roomId
                     );

@@ -4,6 +4,7 @@ import users from "./fake.api/user.api";
 import booking from "./fake.api/booking.api";
 import faciliti from "./fake.api/faciliti.api";
 import payment from "./fake.api/payment.api";
+import guestBook from "./fake.api/guestBook.api";
 
 const API = {
     hotels,
@@ -12,6 +13,7 @@ const API = {
     booking,
     faciliti,
     payment,
+    guestBook,
 };
 
 export default API;

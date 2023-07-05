@@ -3,7 +3,8 @@ export function isRoomAvailable(rooms, startDate, endDate) {
         const booking = rooms[i];
         if (
             startDate < booking.departureDate &&
-            endDate > booking.arrivalDate
+            endDate > booking.arrivalDate &&
+            booking.bookingStatus === 1
         ) {
             return false;
         }
