@@ -6,24 +6,21 @@ import { isRoomAvailable } from "../../utils/isRoomAvailable";
 import FacilitiesList from "../ui/facilities/facilitiesList";
 import { useSelector } from "react-redux";
 import { getHotelById } from "../../store/hotels";
-import { getRoomCurrentHotel } from "../../store/rooms";
-import { getBooking, getBookingLoadingStatus } from "../../store/booking";
-import { getHotelsLoadingStatus } from "../../store/hotels";
-import { getRoomsLoadingStatus } from "../../store/rooms";
+import { selectRoomsByHotelId } from "../../store/rooms";
+import { getBooking } from "../../store/booking";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
+
+    const rooms = useSelector((state) => selectRoomsByHotelId(state, hotelId));
     const hotel = useSelector(getHotelById(hotelId));
-    const hotelLoadingStatus = useSelector(getHotelsLoadingStatus());
-    const rooms = useSelector(getRoomCurrentHotel(hotelId));
-    const roomsLoadingStatus = useSelector(getRoomsLoadingStatus());
     const booking = useSelector(getBooking());
-    const bookingLoadingStatus = useSelector(getBookingLoadingStatus());
+
     const [filterRooms, setFilterRooms] = useState([]);
     const [date, setDate] = useState({});
 
     useEffect(() => {
-        if (!roomsLoadingStatus && !bookingLoadingStatus) {
+        if (rooms && booking) {
             const filtered = rooms.filter(
                 (room) =>
                     room &&
@@ -35,16 +32,16 @@ const HotelPage = () => {
             );
             setFilterRooms(filtered);
         }
-    }, [roomsLoadingStatus, bookingLoadingStatus, booking, date]);
+    }, [date]);
 
-    const handleSubmit = (data) => {
+    const handleChangeData = (data) => {
         setDate({
             arrivalDate: data.arrivalDate,
             departureDate: data.departureDate,
         });
     };
 
-    return !hotelLoadingStatus ? (
+    return hotel ? (
         <>
             <h3 className="mb-3">
                 {`${hotel.name} ${hotel.star} `}
@@ -77,7 +74,7 @@ const HotelPage = () => {
                     </div>
                 </div>
             </div>
-            <Calendar onSubmit={handleSubmit} />
+            <Calendar onSubmit={handleChangeData} />
             {filterRooms.map((room) => (
                 <HotelRoomCard
                     key={room._id}

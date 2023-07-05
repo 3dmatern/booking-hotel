@@ -1,4 +1,4 @@
-import { createAction, createSlice } from "@reduxjs/toolkit";
+import { createAction, createSelector, createSlice } from "@reduxjs/toolkit";
 import roomService from "../services/roomService";
 import api from "../api";
 
@@ -101,11 +101,6 @@ export const removeRoom = (roomId) => async (dispatch) => {
     }
 };
 
-export const getRoomCurrentHotel = (hotelId) => (state) => {
-    return state.rooms.entities
-        ? state.rooms.entities.filter((r) => r.hotelId === hotelId)
-        : null;
-};
 export const getRoomById = (roomId) => (state) => {
     if (state.rooms.entities) {
         return state.rooms.entities.find((r) => r._id === roomId);
@@ -113,5 +108,16 @@ export const getRoomById = (roomId) => (state) => {
 };
 export const getRooms = () => (state) => state.rooms.entities;
 export const getRoomsLoadingStatus = () => (state) => state.rooms.isLoading;
+
+// Меморизация
+export const selectRooms = (state) => state.rooms.entities;
+export const selectRoomsByHotelId = createSelector(
+    [selectRooms, (state, hotelId) => hotelId],
+    (rooms, hotelId) => {
+        if (rooms) {
+            return rooms.filter((r) => r.hotelId === hotelId);
+        }
+    }
+);
 
 export default roomsReducer;
