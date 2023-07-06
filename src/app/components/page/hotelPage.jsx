@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { getHotelById } from "../../store/hotels";
 import { selectRoomsByHotelId } from "../../store/rooms";
 import { getBooking } from "../../store/booking";
+import ReviewHotel from "../ui/reviewHotel";
+import { selectGuestBooksByHotelId } from "../../store/guestBook";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
@@ -15,6 +17,9 @@ const HotelPage = () => {
     const rooms = useSelector((state) => selectRoomsByHotelId(state, hotelId));
     const hotel = useSelector(getHotelById(hotelId));
     const booking = useSelector(getBooking());
+    const reviews = useSelector((state) =>
+        selectGuestBooksByHotelId(state, hotelId)
+    );
 
     const [filterRooms, setFilterRooms] = useState([]);
     const [date, setDate] = useState({});
@@ -41,7 +46,7 @@ const HotelPage = () => {
         });
     };
 
-    return hotel ? (
+    return hotel && reviews ? (
         <>
             <h3 className="mb-3">
                 {`${hotel.name} ${hotel.star} `}
@@ -82,6 +87,12 @@ const HotelPage = () => {
                     dateParam={date}
                 />
             ))}
+            <p className="fw-bold fs-4">Отзывы</p>
+            <div className="card">
+                {reviews.map((r) => (
+                    <ReviewHotel key={r._id} {...r} />
+                ))}
+            </div>
         </>
     ) : (
         <div className="spinner-border text-primary text-center" role="status">

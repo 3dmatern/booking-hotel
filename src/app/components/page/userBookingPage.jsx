@@ -2,11 +2,8 @@ import React, { useEffect, useState } from "react";
 import HotelRoomCard from "../ui/hotelRoomCard";
 import { useDispatch, useSelector } from "react-redux";
 import { getCurrentUser } from "../../store/users";
-import {
-    getBooking,
-    getBookingLoadingStatus,
-    removeBooking,
-} from "../../store/booking";
+import { getBooking, removeBooking } from "../../store/booking";
+import { joinCurrentDate } from "../../utils/formatCalendarDate";
 
 const UserBookingPage = () => {
     const dispatch = useDispatch();
@@ -33,10 +30,10 @@ const UserBookingPage = () => {
 
     return booking ? (
         <>
-            {userBooking &&
-                userBooking.map((booking, index) => {
-                    const { arrivalDate, departureDate } = booking;
-                    return (
+            {userBooking.map((booking, index) => {
+                const { arrivalDate, departureDate } = booking;
+                return (
+                    departureDate > joinCurrentDate() && (
                         <HotelRoomCard
                             date={{
                                 arrivalDate,
@@ -48,8 +45,9 @@ const UserBookingPage = () => {
                             close={true}
                             onClick={handleClick}
                         />
-                    );
-                })}
+                    )
+                );
+            })}
         </>
     ) : (
         <div className="spinner-border text-primary text-center" role="status">

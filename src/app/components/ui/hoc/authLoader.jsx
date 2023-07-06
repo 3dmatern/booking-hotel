@@ -9,6 +9,8 @@ import {
 import { loadHotelsList } from "../../../store/hotels";
 import { loadRoomsList } from "../../../store/rooms";
 import { loadBookingList } from "../../../store/booking";
+import { loadPaymentList } from "../../../store/payment";
+import { loadGuestBooksList } from "../../../store/guestBook";
 
 const AuthLoader = ({ children }) => {
     const dispatch = useDispatch();
@@ -20,6 +22,8 @@ const AuthLoader = ({ children }) => {
         dispatch(loadHotelsList());
         dispatch(loadRoomsList());
         dispatch(loadBookingList());
+        dispatch(loadPaymentList());
+        dispatch(loadGuestBooksList());
         // Например если пользователь не авторизован, то не нужно подгружать определенные данные
         if (isLoggedIn) {
             dispatch(loadUsersList());

@@ -21,9 +21,11 @@ const TextField = ({
     };
     return (
         <>
-            <label htmlFor={name} className="pe-2">
-                {label}
-            </label>
+            {label && (
+                <label htmlFor={name} className="pe-2">
+                    {label}
+                </label>
+            )}
             <div className="input-group has-validation">
                 <input
                     id={name}

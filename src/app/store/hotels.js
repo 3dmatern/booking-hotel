@@ -1,4 +1,4 @@
-import { createAction, createSelector, createSlice } from "@reduxjs/toolkit";
+import { createAction, createSlice } from "@reduxjs/toolkit";
 import hotelService from "../services/hotelService";
 import api from "../api";
 

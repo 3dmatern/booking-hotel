@@ -105,12 +105,12 @@ export const getGuestBookById = (guestBookId) => (state) => {
         return state.guestBooks.entities.find((r) => r._id === guestBookId);
     }
 };
-export const getGuestBooks = () => (state) => state.guestBooks.entities;
+export const getGuestBooks = () => (state) => state.guestBook.entities;
 export const getGuestBooksLoadingStatus = () => (state) =>
     state.guestBooks.isLoading;
 
 // Меморизация
-export const selectGuestBooks = (state) => state.guestBooks.entities;
+export const selectGuestBooks = (state) => state.guestBook.entities;
 export const selectGuestBooksByHotelId = createSelector(
     [selectGuestBooks, (state, hotelId) => hotelId],
     (guestBooks, hotelId) => {

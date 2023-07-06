@@ -5,6 +5,7 @@ const guestBooks = [
         roomId: "1",
         guestFirstName: "Admin",
         guestLastName: "Adminskiy",
+        guestPhone: "+375441234567",
         visitDate: 1688473570565,
         review: "Какой-то отзыв",
         rate: 5,

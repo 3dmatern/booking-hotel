@@ -145,6 +145,12 @@ export const getUserById = (userId) => (state) => {
         return state.users.entities.find((u) => u._id === userId);
     }
 };
+
+export const getUserByPhone = (userPhone) => (state) => {
+    if (state.users.entities) {
+        return state.users.entities.find((u) => u.phone === userPhone);
+    }
+};
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn;
 export const getCurrentUser = () => (state) => {
     return state.users.entities

@@ -10,6 +10,7 @@ import Booking from "./layouts/booking";
 import Logout from "./layouts/logout";
 import AuthLoader from "./components/ui/hoc/authLoader";
 import Payment from "./layouts/payment";
+import User from "./layouts/user";
 
 function App() {
     return (
@@ -25,6 +26,7 @@ function App() {
                     />
                     <Route path="/booking" element={<Booking />} />
                     <Route path="/payment/:roomId" element={<Payment />} />
+                    <Route path="/user/:userId" element={<User />} />
                     <Route path="/admin/*" element={<Admin />} />
                     <Route path="/logout" element={<Logout />} />
                 </Routes>
