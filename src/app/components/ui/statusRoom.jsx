@@ -8,6 +8,7 @@ import {
 } from "../../store/booking";
 import { getRooms, getRoomsLoadingStatus } from "../../store/rooms";
 import { getHotels, getHotelsLoadingStatus } from "../../store/hotels";
+import TextField from "../common/form/textField";
 
 const StatusRoom = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const StatusRoom = () => {
     const hotels = useSelector(getHotels());
     const hotelsLoadingStatus = useSelector(getHotelsLoadingStatus());
     const [data, setData] = useState([]);
+    const [filterData, setFilterData] = useState([]);
 
     const columns = {
         hotelName: "Название отеля",
@@ -49,6 +51,7 @@ const StatusRoom = () => {
                 return item;
             });
             setData(data);
+            setFilterData(data);
         }
     }, [
         bookingLoadingStatus,
@@ -63,9 +66,20 @@ const StatusRoom = () => {
         dispatch(removeBooking(bookingId));
     };
 
+    const handleChange = (target) => {
+        const result = data.filter((d) => d.guestPhone.includes(target.value));
+        setFilterData(result);
+    };
+
     return !bookingLoadingStatus ? (
         <div className="text-center">
-            <Table columns={columns} data={data} onClick={handleClick} />
+            <TextField
+                label="Поиск по номеру телефона гостя"
+                name="guestPhone"
+                placeholder="Введите номер в формате +375441234567"
+                onChange={handleChange}
+            />
+            <Table columns={columns} data={filterData} onClick={handleClick} />
         </div>
     ) : (
         <div className="spinner-border text-primary text-center" role="status">
