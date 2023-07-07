@@ -21,6 +21,7 @@ import {
 const AuthLoader = ({ children }) => {
     const dispatch = useDispatch();
     const usersStatusLoading = useSelector(getUsersLoadingStatus());
+    const isLoggedIn = useSelector(getIsLoggedIn());
 
     const bookings = useSelector(getBooking());
     const guestBooks = useSelector(getGuestBooks());
@@ -77,7 +78,7 @@ const AuthLoader = ({ children }) => {
         dispatch(loadPaymentList());
         dispatch(loadGuestBooksList());
         dispatch(loadUsersList());
-    }, []);
+    }, [isLoggedIn]);
 
     if (usersStatusLoading) return "Loading...";
 

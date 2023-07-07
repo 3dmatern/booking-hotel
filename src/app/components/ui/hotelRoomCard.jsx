@@ -4,6 +4,7 @@ import FacilitiesList from "./facilities/facilitiesList";
 import { useSelector } from "react-redux";
 import { getRoomById, getRoomsLoadingStatus } from "../../store/rooms";
 import { Link } from "react-router-dom";
+import { splitGetTime } from "../../utils/formatCalendarDate";
 
 const HotelRoomCard = ({
     date,
@@ -12,9 +13,17 @@ const HotelRoomCard = ({
     roomId,
     close,
     onClick,
+    error,
 }) => {
     const room = useSelector(getRoomById(roomId));
     const roomsLoadingStatus = useSelector(getRoomsLoadingStatus());
+
+    const amountDayPrice = (arrivalDate, departureDate, price) => {
+        const amountDay =
+            (splitGetTime(departureDate) - splitGetTime(arrivalDate)) /
+            86400000;
+        return (price / 2) * amountDay;
+    };
 
     return !roomsLoadingStatus ? (
         <div className="card mb-3 mx-auto">
@@ -91,11 +100,15 @@ const HotelRoomCard = ({
                             </div>
                             <div className="text-center">
                                 <p className="p-0 m-0">
-                                    <strong>{room.price}₽ </strong>
+                                    <strong>
+                                        {amountDayPrice(
+                                            dateParam.arrivalDate,
+                                            dateParam.departureDate,
+                                            room.price
+                                        )}
+                                        ₽{" "}
+                                    </strong>
                                 </p>
-                                <small className="text-body-secondary p-0 m-0">
-                                    (За две ночи)
-                                </small>
                             </div>
                             {close ? (
                                 <Button
@@ -104,14 +117,19 @@ const HotelRoomCard = ({
                                     onClick={() => onClick(bookingId)}
                                 />
                             ) : (
-                                <>
-                                    <Link
-                                        className="btn btn-warning"
-                                        to={`${room._id}?arrivalDate=${dateParam.arrivalDate}&departureDate=${dateParam.departureDate}`}
-                                    >
-                                        Выбрать
-                                    </Link>
-                                </>
+                                <Button
+                                    className="btn btn-warning"
+                                    type="button"
+                                    name={
+                                        <Link
+                                            className="text-decoration-none text-body-secondary"
+                                            to={`${room._id}?arrivalDate=${dateParam.arrivalDate}&departureDate=${dateParam.departureDate}`}
+                                        >
+                                            Выбрать
+                                        </Link>
+                                    }
+                                    disabled={error}
+                                />
                             )}
                         </div>
                     </div>

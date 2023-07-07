@@ -4,7 +4,7 @@ import TextField from "../common/form/textField";
 import SelectField from "../common/form/selectField";
 import Button from "../common/button";
 
-const Calendar = ({ onSubmit }) => {
+const Calendar = ({ onSubmit, error }) => {
     const [data, setData] = useState({
         arrivalDate: joinCurrentDate(),
         departureDate: joinCurrentDate(172800000),
@@ -49,6 +49,7 @@ const Calendar = ({ onSubmit }) => {
                         value={data.departureDate}
                         min={data.arrivalDate}
                         onChange={handleChange}
+                        error={error}
                     />
                 </div>
                 <SelectField

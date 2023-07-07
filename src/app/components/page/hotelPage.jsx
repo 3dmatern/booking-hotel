@@ -23,6 +23,7 @@ const HotelPage = () => {
 
     const [filterRooms, setFilterRooms] = useState([]);
     const [date, setDate] = useState({});
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         if (rooms && booking) {
@@ -40,10 +41,16 @@ const HotelPage = () => {
     }, [date]);
 
     const handleChangeData = (data) => {
-        setDate({
-            arrivalDate: data.arrivalDate,
-            departureDate: data.departureDate,
-        });
+        if (data.arrivalDate === data.departureDate) {
+            setError(true);
+            return;
+        } else {
+            setError(false);
+            setDate({
+                arrivalDate: data.arrivalDate,
+                departureDate: data.departureDate,
+            });
+        }
     };
 
     return hotel && reviews ? (
@@ -79,12 +86,13 @@ const HotelPage = () => {
                     </div>
                 </div>
             </div>
-            <Calendar onSubmit={handleChangeData} />
+            <Calendar onSubmit={handleChangeData} error={error} />
             {filterRooms.map((room) => (
                 <HotelRoomCard
                     key={room._id}
                     roomId={room._id}
                     dateParam={date}
+                    error={error}
                 />
             ))}
             <p className="fw-bold fs-4">Отзывы</p>

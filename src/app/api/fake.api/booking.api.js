@@ -11,12 +11,12 @@ const booking = [
     },
     {
         _id: "1",
-        roomId: "2",
+        roomId: "1",
         arrivalDate: "2023-07-04",
         departureDate: "2023-07-06",
-        guestFirstName: "Admin",
-        guestLastName: "Adminskiy",
-        guestPhone: "+375441234567",
+        guestFirstName: "Тест",
+        guestLastName: "Тестовский",
+        guestPhone: "+375447654321",
         bookingStatus: 1,
     },
 ];

@@ -10,7 +10,7 @@ const guestBooks = [
         review: "Какой-то отзыв",
         rate: 5,
         reviewStatus: true,
-        dateReview: 1688720838917,
+        dateReview: 1688473570565,
     },
 ];
 
