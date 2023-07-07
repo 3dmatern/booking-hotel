@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { getUserByPhone } from "../../store/users";
+import { getCurrentUser, getUserByPhone } from "../../store/users";
 import { joinDate } from "../../utils/formatCalendarDate";
 
 const ReviewHotel = ({
@@ -9,7 +9,9 @@ const ReviewHotel = ({
     guestPhone,
     review,
     dateReview,
+    onRemove,
 }) => {
+    const currentUser = useSelector(getCurrentUser());
     const user = useSelector(getUserByPhone(guestPhone));
 
     return (
@@ -37,14 +39,17 @@ const ReviewHotel = ({
                                                 - {joinDate(dateReview)}
                                             </span>
                                         </p>
-                                        {/* {currentUserId === userId && (
-                                        <button
-                                            className="btn btn-sm text-primary d-flex align-items-center"
-                                            onClick={() => onRemove(id)}
-                                        >
-                                            <i className="bi bi-x-lg"></i>
-                                        </button>
-                                    )} */}
+                                        {currentUser &&
+                                            currentUser.role === "ADMIN" && (
+                                                <button
+                                                    className="btn btn-sm text-primary d-flex align-items-center"
+                                                    onClick={() =>
+                                                        onRemove(_id)
+                                                    }
+                                                >
+                                                    <i className="bi bi-x-lg"></i>
+                                                </button>
+                                            )}
                                     </div>
                                     <p className="small mb-0">{review}</p>
                                 </div>

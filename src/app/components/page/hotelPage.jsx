@@ -4,15 +4,20 @@ import HotelRoomCard from "../ui/hotelRoomCard";
 import Calendar from "../ui/calendar";
 import { isRoomAvailable } from "../../utils/isRoomAvailable";
 import FacilitiesList from "../ui/facilities/facilitiesList";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getHotelById } from "../../store/hotels";
 import { selectRoomsByHotelId } from "../../store/rooms";
 import { getBooking } from "../../store/booking";
 import ReviewHotel from "../ui/reviewHotel";
-import { selectGuestBooksByHotelId } from "../../store/guestBook";
+import {
+    selectGuestBooksByHotelId,
+    updateGuestBook,
+} from "../../store/guestBook";
+import { removeGuestBook } from "../../store/guestBook";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
+    const dispatch = useDispatch();
 
     const rooms = useSelector((state) => selectRoomsByHotelId(state, hotelId));
     const hotel = useSelector(getHotelById(hotelId));
@@ -38,7 +43,7 @@ const HotelPage = () => {
             );
             setFilterRooms(filtered);
         }
-    }, [date]);
+    }, [date, booking]);
 
     const handleChangeData = (data) => {
         if (data.arrivalDate === data.departureDate) {
@@ -51,6 +56,15 @@ const HotelPage = () => {
                 departureDate: data.departureDate,
             });
         }
+    };
+
+    const handleRemove = (id) => {
+        const payload = {
+            review: "",
+            rate: 0,
+            reviewStatus: false,
+        };
+        dispatch(updateGuestBook(id, payload));
     };
 
     return hotel && reviews ? (
@@ -97,9 +111,16 @@ const HotelPage = () => {
             ))}
             <p className="fw-bold fs-4">Отзывы</p>
             <div className="card">
-                {reviews.map((r) => (
-                    <ReviewHotel key={r._id} {...r} />
-                ))}
+                {reviews.map(
+                    (r) =>
+                        r.reviewStatus && (
+                            <ReviewHotel
+                                key={r._id}
+                                {...r}
+                                onRemove={handleRemove}
+                            />
+                        )
+                )}
             </div>
         </>
     ) : (

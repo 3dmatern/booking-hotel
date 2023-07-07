@@ -10,7 +10,7 @@ const booking = [
         bookingStatus: 1,
     },
     {
-        _id: "1",
+        _id: "2",
         roomId: "1",
         arrivalDate: "2023-07-04",
         departureDate: "2023-07-06",

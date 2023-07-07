@@ -63,8 +63,14 @@ const removeGuestBook = (id) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
             const guestBooks = JSON.parse(localStorage.getItem("guestBooks"));
-            const newGuestBooks = guestBooks.filter((g) => g._id !== id);
-            localStorage.setItem("guestBooks", JSON.stringify(newGuestBooks));
+            const guestBookIndex = guestBooks.findIndex((g) => g._id === id);
+            guestBooks[guestBookIndex] = {
+                ...guestBooks[guestBookIndex],
+                review: "",
+                rate: 0,
+                reviewStatus: false,
+            };
+            localStorage.setItem("guestBooks", JSON.stringify(guestBooks));
             resolve(null);
         }, 200);
     });

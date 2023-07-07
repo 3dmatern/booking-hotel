@@ -154,7 +154,9 @@ export const getUserByPhone = (userPhone) => (state) => {
 export const getIsLoggedIn = () => (state) => state.users.isLoggedIn;
 export const getCurrentUser = () => (state) => {
     return state.users.entities
-        ? state.users.entities.find((u) => u._id === state.users.auth.userId)
+        ? state.users.entities.find(
+              (u) => state.users.auth && u._id === state.users.auth.userId
+          )
         : null;
 };
 export const getAuthErrors = () => (state) => state.users.error;

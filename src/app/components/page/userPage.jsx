@@ -18,7 +18,7 @@ const UserPage = () => {
             );
             setUserInBookingRooms(check);
         }
-    }, [currentUser, guestBooks]);
+    }, [guestBooks]);
 
     return (
         currentUser &&
