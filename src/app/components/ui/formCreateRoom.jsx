@@ -128,7 +128,7 @@ const FormCreateRoom = () => {
             </div>
             <div className="mb-3">
                 <TextField
-                    label="Стоимость за 2 ночи"
+                    label="Стоимость за ночь"
                     type="number"
                     name="price"
                     min="0"
