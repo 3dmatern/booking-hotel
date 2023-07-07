@@ -9,6 +9,16 @@ const booking = [
         guestPhone: "+375441234567",
         bookingStatus: 1,
     },
+    {
+        _id: "1",
+        roomId: "2",
+        arrivalDate: "2023-07-04",
+        departureDate: "2023-07-06",
+        guestFirstName: "Admin",
+        guestLastName: "Adminskiy",
+        guestPhone: "+375441234567",
+        bookingStatus: 1,
+    },
 ];
 
 if (!localStorage.getItem("booking")) {

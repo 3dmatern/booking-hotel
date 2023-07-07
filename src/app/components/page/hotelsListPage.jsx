@@ -1,14 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import HotelCard from "../ui/hotelCard";
 import { paginate } from "../../utils/paginate";
 import Pagination from "../common/pagination";
 import { useSelector } from "react-redux";
 import { getHotels } from "../../store/hotels";
+import { getGuestBooks } from "../../store/guestBook";
 
 const HotelsListPage = () => {
     const hotels = useSelector(getHotels());
+    const reviews = useSelector(getGuestBooks());
+
     const [currentPage, setCurrentPage] = useState(1);
     const pageSize = 8;
+
+    const getRatingHotel = (hotelId) => {
+        let rating = 0;
+        if (reviews) {
+            const hotelReviews = reviews.filter(
+                (r) => r.hotelId === hotelId && r.reviewStatus
+            );
+            hotelReviews.map((r) => {
+                if (r) {
+                    rating = r.rate + rating;
+                }
+                return r;
+            });
+            return hotelReviews.length > 0
+                ? rating / hotelReviews.length
+                : null;
+        }
+    };
+
     const handlePageChange = (pageIndex) => {
         setCurrentPage(pageIndex);
     };
@@ -25,6 +47,7 @@ const HotelsListPage = () => {
                             name={hotel.name}
                             star={hotel.star}
                             image={hotel.image}
+                            rate={getRatingHotel(hotel._id)}
                         />
                     ))}
                 </div>

@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { getUserByPhone } from "../../store/users";
-import { joinCurrentDate } from "../../utils/formatCalendarDate";
+import { joinDate } from "../../utils/formatCalendarDate";
 
 const ReviewHotel = ({
     _id,
@@ -8,6 +8,7 @@ const ReviewHotel = ({
     guestLastName,
     guestPhone,
     review,
+    dateReview,
 }) => {
     const user = useSelector(getUserByPhone(guestPhone));
 
@@ -33,7 +34,7 @@ const ReviewHotel = ({
                                                     " " +
                                                     guestLastName}{" "}
                                             <span className="small">
-                                                - {joinCurrentDate()}
+                                                - {joinDate(dateReview)}
                                             </span>
                                         </p>
                                         {/* {currentUserId === userId && (

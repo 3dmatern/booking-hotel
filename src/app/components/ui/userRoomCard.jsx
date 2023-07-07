@@ -17,6 +17,8 @@ const UserRoomCard = ({ _id, hotelId, roomId, visitDate, review, rate }) => {
     const [data, setData] = useState({
         review: "",
         rate: 0,
+        reviewStatus: true,
+        dateReview: Date.now(),
     });
 
     const handleClick = (rate) => {
