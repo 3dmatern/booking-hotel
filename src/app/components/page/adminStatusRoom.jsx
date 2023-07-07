@@ -5,17 +5,21 @@ import StatusRoom from "../ui/statusRoom";
 import FormCreateHotel from "../ui/formCreateHotel";
 import FormCreateRoom from "../ui/formCreateRoom";
 import { useSelector } from "react-redux";
-import { getCurrentUser } from "../../store/users";
+import { getCurrentUser, getUsersLoadingStatus } from "../../store/users";
 
 const AdminStatusRoom = () => {
     const navigate = useNavigate();
     const currentUser = useSelector(getCurrentUser());
+    const usersLoadingStatus = useSelector(getUsersLoadingStatus());
 
     useEffect(() => {
-        if (!currentUser || currentUser.role !== "ADMIN") {
+        if (
+            (!currentUser && usersLoadingStatus) ||
+            (currentUser && currentUser.role !== "ADMIN")
+        ) {
             navigate("/");
         }
-    }, [currentUser]);
+    }, [currentUser, usersLoadingStatus]);
 
     return (
         currentUser && (
