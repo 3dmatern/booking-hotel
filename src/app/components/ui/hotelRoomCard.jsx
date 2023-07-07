@@ -102,8 +102,8 @@ const HotelRoomCard = ({
                                 <p className="p-0 m-0">
                                     <strong>
                                         {amountDayPrice(
-                                            dateParam.arrivalDate,
-                                            dateParam.departureDate,
+                                            (dateParam || date).arrivalDate,
+                                            (dateParam || date).departureDate,
                                             room.price
                                         )}
                                         ₽{" "}

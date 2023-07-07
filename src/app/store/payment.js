@@ -59,16 +59,19 @@ export const loadPaymentList = () => async (dispatch) => {
     }
 };
 
-export const createPayment = (payload) => async (dispatch) => {
-    dispatch(createPaymentReq());
-    try {
-        const content = await api.payment.create(payload);
-        // const { content } = await paymentService.create(payload);
-        dispatch(paymentCreated(content));
-    } catch (error) {
-        dispatch(paymentReqFailed(error.message));
-    }
-};
+export const createPayment =
+    ({ payload, navigate }) =>
+    async (dispatch) => {
+        dispatch(createPaymentReq());
+        try {
+            const content = await api.payment.create(payload);
+            // const { content } = await paymentService.create(payload);
+            dispatch(paymentCreated(content));
+            navigate(-1);
+        } catch (error) {
+            dispatch(paymentReqFailed(error.message));
+        }
+    };
 
 export const updatePayment = (paymentId, payload) => async (dispatch) => {
     dispatch(updatePaymentReq());

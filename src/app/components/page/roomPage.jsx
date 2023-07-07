@@ -47,7 +47,7 @@ const RoomPage = ({ roomId }) => {
                 paymentType: "Card",
                 paymentStatus: true,
             };
-            dispatch(createPayment(payloadPayment));
+            dispatch(createPayment({ payload: payloadPayment, navigate }));
         }
     };
 
