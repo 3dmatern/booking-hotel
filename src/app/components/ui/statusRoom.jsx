@@ -73,12 +73,14 @@ const StatusRoom = () => {
 
     return !bookingLoadingStatus ? (
         <div className="text-center">
-            <TextField
-                label="Поиск по номеру телефона гостя"
-                name="guestPhone"
-                placeholder="Введите номер в формате +375441234567"
-                onChange={handleChange}
-            />
+            <div className="mb-4 w-50 mx-auto">
+                <TextField
+                    label="Поиск по номеру телефона гостя"
+                    name="guestPhone"
+                    placeholder="Введите номер в формате +375441234567"
+                    onChange={handleChange}
+                />
+            </div>
             <Table columns={columns} data={filterData} onClick={handleClick} />
         </div>
     ) : (
