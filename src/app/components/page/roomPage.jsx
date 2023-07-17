@@ -51,7 +51,7 @@ const RoomPage = ({ roomId }) => {
         }
     };
 
-    return hotel && currentUser ? (
+    return hotel ? (
         <>
             <h3 className="mb-3">
                 {`${hotel.name} ${hotel.star} `}

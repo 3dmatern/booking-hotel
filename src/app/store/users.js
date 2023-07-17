@@ -162,7 +162,6 @@ export const getCurrentUser = () => (state) => {
 export const getAuthErrors = () => (state) => state.users.error;
 
 export const getUsers = () => (state) => state.users.entities;
-export const getUsersLoadingStatus = () => (state) =>
-    state.facilities.isLoading;
+export const getUsersLoadingStatus = () => (state) => state.users.isLoading;
 
 export default usersReducer;

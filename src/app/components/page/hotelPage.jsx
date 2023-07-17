@@ -13,7 +13,6 @@ import {
     selectGuestBooksByHotelId,
     updateGuestBook,
 } from "../../store/guestBook";
-import { removeGuestBook } from "../../store/guestBook";
 
 const HotelPage = () => {
     const { hotelId } = useParams();
